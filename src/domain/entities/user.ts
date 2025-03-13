@@ -1,11 +1,14 @@
 export interface User {
     id: number;
-    name: string;
+    token: string; 
+}
+
+export interface UserDetail {
+    id: number;
     email: string;
-    password: string;
+    name: string;
     age: number;
     location: string;
-    token?: string; 
 }
   
 export interface UserRequest {

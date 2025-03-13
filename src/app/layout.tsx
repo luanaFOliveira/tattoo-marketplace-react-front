@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
 import ToastProvider from './ToastProvider';
+import { AuthProvider } from "@/presentation/context/AuthContext"; 
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,7 +32,9 @@ export default function RootLayout({
       >
         <AppRouterCacheProvider>
           <ToastProvider>
-          {children}
+            <AuthProvider>
+              {children}
+            </AuthProvider>
           </ToastProvider>
         </AppRouterCacheProvider>
       </body>
