@@ -13,7 +13,7 @@ export default function LoginForm() {
     email: "",
     password: "",
   });
-  
+
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -25,7 +25,6 @@ export default function LoginForm() {
     try {
       const response: LoginResponse = await loginUseCase.execute(credentials);
       console.log("Usuário logado:", response.id);
-      localStorage.setItem("token", response.token);
       toast.success("Login realizado com sucesso.");
     } catch (error) {
       console.error("Erro no login:", error);

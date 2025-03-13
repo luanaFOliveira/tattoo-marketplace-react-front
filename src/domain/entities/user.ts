@@ -9,6 +9,8 @@ export interface UserDetail {
     name: string;
     age: number;
     location: string;
+    createdAt: string;
+    updatedAt: string;
 }
   
 export interface UserRequest {
