@@ -4,22 +4,13 @@ import { SignUpUseCase } from "@/application/auth/signUpUseCase";
 import { AuthApi } from "@/infra/api/authApi";
 import { toast } from "react-toastify";
 import { TextField, Button, CircularProgress, Box } from "@mui/material";
+import { UserRequest} from "@/domain/entities/user";
 
 const signUpUseCase = new SignUpUseCase(new AuthApi());
 
-interface UserRequest {
-  id: number;
-  name: string;
-  email: string;
-  password: string;
-  passwordConfirm: string;
-  age: number;
-  location: string;
-}
 
 export default function SignUpForm() {
   const [user, setUser] = useState<UserRequest>({
-    id: 0,
     name: "",
     email: "",
     password: "",
@@ -27,7 +18,7 @@ export default function SignUpForm() {
     age: 0,
     location: "",
   });
-  
+
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,14 +45,7 @@ export default function SignUpForm() {
     }
 
     try {
-      const { id } = await signUpUseCase.execute(
-        user.name,
-        user.email,
-        user.password,
-        user.passwordConfirm,
-        user.location,
-        user.age
-      );
+      const { id } = await signUpUseCase.execute(user);
       console.log("Usuário cadastrado:", id);
       toast.success("Cadastro realizado com sucesso.");
     } catch (error) {

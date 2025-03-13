@@ -4,20 +4,28 @@ import { LoginUseCase } from "@/application/auth/loginUseCase";
 import { AuthApi } from "@/infra/api/authApi";
 import { toast } from "react-toastify";
 import { TextField, Button, CircularProgress, Box } from "@mui/material";
+import { LoginRequest, LoginResponse } from "@/domain/entities/user";
 
 const loginUseCase = new LoginUseCase(new AuthApi());
 
 export default function LoginForm() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [credentials, setCredentials] = useState<LoginRequest>({
+    email: "",
+    password: "",
+  });
+  
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCredentials({ ...credentials, [e.target.name]: e.target.value });
+  };
 
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const { id, token } = await loginUseCase.execute(email, password);
-      console.log("Usuário logado:", id);
-      localStorage.setItem("token", token);
+      const response: LoginResponse = await loginUseCase.execute(credentials);
+      console.log("Usuário logado:", response.id);
+      localStorage.setItem("token", response.token);
       toast.success("Login realizado com sucesso.");
     } catch (error) {
       console.error("Erro no login:", error);
@@ -34,16 +42,18 @@ export default function LoginForm() {
           label="Email"
           variant="outlined"
           type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          name="email"
+          value={credentials.email}
+          onChange={handleChange}
           fullWidth
         />
         <TextField
           label="Senha"
           variant="outlined"
           type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          name="password"
+          value={credentials.password}
+          onChange={handleChange}
           fullWidth
         />
         <Button
