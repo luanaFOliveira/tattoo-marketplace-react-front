@@ -10,5 +10,16 @@ export interface TattooArtist {
     categories: Category[];
     createdAt: string;
     updatedAt: string;
+    images: string[];
 }
   
+export interface TattooArtistRequest {
+    name: string;
+    email: string;
+    password: string;
+    passwordConfirm: string;
+    age: number;
+    location: string;
+    rate: number;
+    categoryIds: number[];
+}
