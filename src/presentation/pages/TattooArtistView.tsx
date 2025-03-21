@@ -62,7 +62,7 @@ export default function TattooArtistView({ tattooArtistId }: { tattooArtistId: s
           </Box>
           
         </CardContent>
-        <QuoteModal/>
+        <QuoteModal tattooArtist={artist}/>
       </Card>
       <Typography variant="h5" sx={{ mt: 4, mb: 2, textAlign: "center", fontWeight: "bold" }}>
         Portfólio
