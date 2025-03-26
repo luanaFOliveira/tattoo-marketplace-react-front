@@ -7,6 +7,7 @@ import QuoteModal from "@/presentation/components/QuoteModal";
 import { useAuth } from "@/presentation/context/AuthContext";
 import { useRouter } from 'next/navigation'
 import { toast } from "react-toastify";
+import Image from 'next/image'
 
 export default function TattooArtistView({ tattooArtistId }: { tattooArtistId: string }) {
   const [artist, setArtist] = useState<TattooArtist | null>(null);
@@ -26,6 +27,7 @@ export default function TattooArtistView({ tattooArtistId }: { tattooArtistId: s
         toast.error("Erro ao buscar tatuador");
       } finally {
         setLoading(false);
+       
       }
     };
 
@@ -33,6 +35,7 @@ export default function TattooArtistView({ tattooArtistId }: { tattooArtistId: s
   }, [tattooArtistId]);
 
   if (loading) {
+    
     return <CircularProgress sx={{ display: "block", margin: "auto", mt: 5 }} />;
   }
 
@@ -53,13 +56,12 @@ export default function TattooArtistView({ tattooArtistId }: { tattooArtistId: s
   return (
     <Box sx={{ maxWidth: "1000px", mx: "auto", mt: 5 }}>
       <Card sx={{ display: "flex", border: "2px solid #6A0DAD", borderRadius: 3, boxShadow: 3 }}>
-        <CardMedia
-          component="img"
-          image="/placeholder.jpg"
-          // image={artist.imageUrl || "/placeholder.jpg"} 
-          alt={artist.name}
-          sx={{ width: 300, height: "100%", objectFit: "cover", borderRadius: "5px 0 0 5px" }}
-        />
+      <CardMedia
+        component="img"
+        image={`http://localhost:8089${artist.profilePicture}`}
+        alt={artist.name}
+        sx={{ width: 300, height: "100%", objectFit: "cover", borderRadius: "5px 0 0 5px" }}
+      />
         <CardContent sx={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", p: 3 }}>
           <Typography variant="h4" color="primary" fontWeight="bold">
             {artist.name}
@@ -88,32 +90,31 @@ export default function TattooArtistView({ tattooArtistId }: { tattooArtistId: s
         Portfólio
       </Typography>
 
-      {artist.images && artist.images.length > 0 ? (
-        <Grid container spacing={2}>
-          {artist.images.map((imageUrl, index) => (
+      {artist.images?.length > 0 ? (
+      <Grid container spacing={2}>
+        {artist.images.map((image, index) => {
+          return (
             <Grid item xs={6} sm={4} md={3} key={index}>
               <Box
                 component="img"
-                src={`http://localhost:8089${imageUrl}`}  
+                src={`http://localhost:8089${image}`}
                 alt={`Tattoo ${index + 1}`}
                 sx={{
                   width: "100%",
                   height: 200,
                   objectFit: "cover",
                   borderRadius: 2,
-                  transition: "transform 0.3s ease-in-out",
-                  "&:hover": { transform: "scale(1.05)" },
                 }}
               />
             </Grid>
-          ))}
-        </Grid>
-      ) : (
-        <Typography variant="body1" color="text.secondary" sx={{ textAlign: "center", mt: 2 }}>
-          Nenhum trabalho no portfólio ainda.
-        </Typography>
-      )}
-
+          );
+        })}
+      </Grid>
+    ) : (
+      <Typography variant="body1" color="text.secondary" sx={{ textAlign: "center", mt: 2 }}>
+        Nenhum trabalho no portfólio ainda.
+      </Typography>
+    )}
     </Box>
   );
 }

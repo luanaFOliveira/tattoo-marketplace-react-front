@@ -10,7 +10,6 @@ export class TattooArtistApi implements TattooArtistRepository {
         });
     
         const data = await response.json();
-    
         return this.mapToTattooArtist(data);
     }
     
@@ -33,10 +32,14 @@ export class TattooArtistApi implements TattooArtistRepository {
       images.forEach((image, index) => {
         formData.append(`images[${index}]`, image);
       });
+
+      const storedUser = localStorage.getItem("user");
+      const token = storedUser ? JSON.parse(storedUser).token : null;
   
       const response = await fetch(`http://localhost:8089/tattoo-artist/register`, {
         method: "POST",
         body: formData,
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
       });
   
       if (!response.ok) {
@@ -58,7 +61,9 @@ export class TattooArtistApi implements TattooArtistRepository {
       rate: data.rate,
       categories: data.categories,
       createdAt: data.createdAt,
-      updatedAt: data.updatedAt
+      updatedAt: data.updatedAt,
+      images: data.images,
+      profilePicture: data.profilePicture
     };
   }
 
