@@ -4,9 +4,12 @@ import { QuoteRepository } from "@/domain/repositories/quoteRepository";
 export class QuoteApi implements QuoteRepository {
 
     async getQuote(id: string): Promise<Quote> {
+        const storedUser = localStorage.getItem("user");
+        const token = storedUser ? JSON.parse(storedUser).token : null;
+
         const response = await fetch(`http://localhost:8089/quote/${id}`, {
           method: "GET",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json" , Authorization: `Bearer ${token}`},
         });
     
         const data = await response.json();
@@ -14,16 +17,33 @@ export class QuoteApi implements QuoteRepository {
         return this.mapToQuote(data);
     }
     
-    async getAllQuotes(): Promise<Quote[]> {
-        const response = await fetch(`http://localhost:8089/quote`, {
+    async getAllQuotesByUser(): Promise<Quote[]> {
+        const storedUser = localStorage.getItem("user");
+        const token = storedUser ? JSON.parse(storedUser).token : null;
+        const userId = storedUser ? JSON.parse(storedUser).id : null;
+        const response = await fetch(`http://localhost:8089/quote/user/${userId}`, {
           method: "GET",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json" , Authorization: `Bearer ${token}`},
         });
     
         const data = await response.json();
     
-        return data.map((artist: any) => this.mapToQuote(artist));
+        return data.map((quote: any) => this.mapToQuote(quote));
     }
+
+    async getAllQuotesByTattooArtist(): Promise<Quote[]> {
+      const storedUser = localStorage.getItem("user");
+      const token = storedUser ? JSON.parse(storedUser).token : null;
+      const userId = storedUser ? JSON.parse(storedUser).id : null;
+      const response = await fetch(`http://localhost:8089/quote/tattoo-artist/${userId}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" , Authorization: `Bearer ${token}`},
+      });
+  
+      const data = await response.json();
+  
+      return data.map((artist: any) => this.mapToQuote(artist));
+  }
 
     async registerQuote(data: QuoteRequest, images: File[] = []): Promise<{ id:number }> {
       const formData = new FormData();
@@ -33,10 +53,14 @@ export class QuoteApi implements QuoteRepository {
       images.forEach((image, index) => {
         formData.append(`images[${index}]`, image);
       });
-  
+
+      const storedUser = localStorage.getItem("user");
+      const token = storedUser ? JSON.parse(storedUser).token : null;
+
       const response = await fetch(`http://localhost:8089/quote/register`, {
         method: "POST",
         body: formData,
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
       });
   
       if (!response.ok) {
