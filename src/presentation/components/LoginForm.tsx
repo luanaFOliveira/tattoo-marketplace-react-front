@@ -5,8 +5,9 @@ import { AuthApi } from "@/infra/api/authApi";
 import { toast } from "react-toastify";
 import { TextField, Button, CircularProgress, Box } from "@mui/material";
 import { LoginRequest, LoginResponse } from "@/domain/entities/user";
+import { useRouter } from 'next/navigation'
+import { useAuth } from "@/presentation/context/AuthContext";  
 
-const loginUseCase = new LoginUseCase(new AuthApi());
 
 export default function LoginForm() {
   const [credentials, setCredentials] = useState<LoginRequest>({
@@ -14,7 +15,11 @@ export default function LoginForm() {
     password: "",
   });
 
+  const { login } = useAuth();  
+  const loginUseCase = new LoginUseCase(new AuthApi(login));
+
   const [loading, setLoading] = useState<boolean>(false);
+  const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
@@ -26,6 +31,7 @@ export default function LoginForm() {
       const response: LoginResponse = await loginUseCase.execute(credentials);
       console.log("Usuário logado:", response.id);
       toast.success("Login realizado com sucesso.");
+      router.push("/");
     } catch (error) {
       console.error("Erro no login:", error);
       toast.error("Erro ao realizar login.");
