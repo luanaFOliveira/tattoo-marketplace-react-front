@@ -3,6 +3,13 @@ import { User, UserRequest, LoginRequest, LoginResponse } from "@/domain/entitie
 import { useAuth } from "@/presentation/context/AuthContext";
 
 export class AuthApi implements AuthRepository {
+
+  private loginFn: (user: User) => void;
+
+  constructor(loginFn: (user: User) => void) {
+    this.loginFn = loginFn;
+  }
+
   async login(userData:LoginRequest): Promise<LoginResponse> {
     const response = await fetch("http://localhost:8089/auth/login", {
       method: "POST",
@@ -15,12 +22,13 @@ export class AuthApi implements AuthRepository {
     const user: User = { 
         id: data.id, 
         token: data.token, 
+        isTattooArtist: data.isTattooArtist,
+        profilePicture: data.profilePicture
     };
   
-    const { login } = useAuth();
-    login(user);
+    this.loginFn(user);
 
-    return { id: data.id, token: data.token };
+    return { id: data.id, token: data.token, isTattooArtist: data.isTattooArtist, profilePicture: data.profilePicture };
   }
 
   async signUp(userData: UserRequest): Promise<{ id:number }> {

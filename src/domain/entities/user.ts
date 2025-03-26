@@ -1,6 +1,8 @@
 export interface User {
     id: number;
     token: string; 
+    isTattooArtist: boolean;
+    profilePicture: string;
 }
 
 export interface UserDetail {
@@ -11,6 +13,7 @@ export interface UserDetail {
     location: string;
     createdAt: string;
     updatedAt: string;
+    profilePicture: string;
 }
   
 export interface UserRequest {
@@ -30,5 +33,8 @@ export interface LoginRequest {
 export interface LoginResponse {
     id: number;
     token: string;
+    isTattooArtist: boolean;
+    profilePicture: string;
+
 }
   

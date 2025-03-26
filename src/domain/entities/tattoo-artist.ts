@@ -1,4 +1,5 @@
 import { Category } from './category';
+import { UserRequest } from './user';
 
 export interface TattooArtist {
     id: number;
@@ -11,15 +12,9 @@ export interface TattooArtist {
     createdAt: string;
     updatedAt: string;
     images: string[];
+    profilePicture: string;
 }
   
-export interface TattooArtistRequest {
-    name: string;
-    email: string;
-    password: string;
-    passwordConfirm: string;
-    age: number;
-    location: string;
-    rate: number;
+export interface TattooArtistRequest extends UserRequest {
     categoryIds: number[];
 }
