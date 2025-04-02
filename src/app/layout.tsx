@@ -6,6 +6,7 @@ import ToastProvider from "./ToastProvider";
 import ClientAuthProvider from "./ClientAuthProvider";
 import Navbar from "@/presentation/components/Navbar"; 
 import { Container } from "@mui/material";
+import { StyledRoot } from "./StyledRoot"; 
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,6 +23,8 @@ export const metadata: Metadata = {
   description: "Encontre os melhores tatuadores perto de você!",
 };
 
+
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -33,10 +36,12 @@ export default function RootLayout({
         <AppRouterCacheProvider>
           <ToastProvider>
             <ClientAuthProvider>
-              <Navbar /> 
-              <Container maxWidth="xl" sx={{ marginTop: 5 }}>
-                {children} 
-              </Container>
+              <StyledRoot>
+                <Navbar /> 
+                <Container maxWidth="xl" sx={{ marginTop: 5 }}>
+                  {children}
+                </Container>
+              </StyledRoot>
             </ClientAuthProvider>
           </ToastProvider>
         </AppRouterCacheProvider>
