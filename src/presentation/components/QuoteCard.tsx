@@ -1,41 +1,41 @@
-import Link from "next/link";
 import * as React from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import Chip from "@mui/material/Chip";
 import { Quote } from "@/domain/entities/quote";
+import StatusChip from "@/presentation/components/StatusChip";
 
 type Props = {
   quote: Quote;
+  onClick: () => void;
 };
 
-export default function QuoteCard({ quote }: Props) {
-  return (
-    <Link href={`/quote/${quote.id}`} passHref style={{ textDecoration: "none" }}>
-      <Card sx={{ maxWidth: 345, position: "relative", p: 1, backgroundColor: "#2c2c2c", cursor: "pointer" }}>
+export default function QuoteCard({ quote, onClick }: Props) {
+    return (
+      <Card
+        sx={{
+          maxWidth: 345,
+          position: "relative",
+          p: 1,
+          backgroundColor: "secondary",
+          cursor: "pointer",
+        }}
+        onClick={onClick}
+      >
         <CardContent>
           <Box display="flex" justifyContent="space-between" alignItems="center">
             <Typography variant="h6" component="div" color="white">
-              {/* {quote.description} */}
-              descricao
+              {quote.tattooArtist.name}
             </Typography>
-            <Box display="flex" alignItems="center">
-              <Typography variant="body2" color="white" sx={{ ml: 0.5 }}>
-                {/* {quote.tattooArtist.name} */}
-                artista
-              </Typography>
-            </Box>
+            <StatusChip status={quote.status.name} /> 
           </Box>
           <Box display="flex" alignItems="center">
-            <Typography variant="body2" color="white">
-              {/* {quote.status.name} */}
-              status
+            <Typography variant="h6" color="white">
+              {quote.description}
             </Typography>
           </Box>
         </CardContent>
       </Card>
-    </Link>
-  );
-}
+    );
+  }

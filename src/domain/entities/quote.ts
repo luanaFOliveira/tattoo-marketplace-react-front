@@ -1,5 +1,5 @@
 import { TattooArtist } from "./tattoo-artist";
-import { User } from "./user";
+import { UserDetail } from "./user";
 import { Status } from "./status";
 
 export interface QuoteRequest {
@@ -15,7 +15,7 @@ export interface Quote {
     id: number;
     description: string;
     price: number;
-    user: User;
+    user: UserDetail;
     tattooArtist: TattooArtist;
     status: Status;
 }
@@ -27,7 +27,7 @@ export interface QuoteExtended {
     color: string;
     size: number;
     price: number;
-    user: User;
+    user: UserDetail;
     tattooArtist: TattooArtist;
     status: Status;
     images: string[];

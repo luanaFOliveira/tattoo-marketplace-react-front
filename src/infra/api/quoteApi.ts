@@ -1,9 +1,9 @@
-import { Quote, QuoteRequest } from "@/domain/entities/quote";
+import { Quote, QuoteExtended, QuoteRequest } from "@/domain/entities/quote";
 import { QuoteRepository } from "@/domain/repositories/quoteRepository";
 
 export class QuoteApi implements QuoteRepository {
 
-    async getQuote(id: string): Promise<Quote> {
+    async getQuote(id: string): Promise<QuoteExtended> {
         const storedUser = localStorage.getItem("user");
         const token = storedUser ? JSON.parse(storedUser).token : null;
 
@@ -14,7 +14,7 @@ export class QuoteApi implements QuoteRepository {
     
         const data = await response.json();
     
-        return this.mapToQuote(data);
+        return this.mapToQuoteExtended(data);
     }
     
     async getAllQuotesByUser(): Promise<Quote[]> {
@@ -47,8 +47,8 @@ export class QuoteApi implements QuoteRepository {
 
     async registerQuote(data: QuoteRequest, images: File[] = []): Promise<{ id:number }> {
       const formData = new FormData();
-  
-      formData.append("request", JSON.parse(JSON.stringify(data)));
+      const jsonBlob = new Blob([JSON.stringify(data)], { type: "application/json" });
+      formData.append("request", jsonBlob);
   
       images.forEach((image, index) => {
         formData.append(`images[${index}]`, image);
@@ -80,6 +80,16 @@ export class QuoteApi implements QuoteRepository {
       user: data.user,
       tattooArtist: data.tattooArtist,
       status: data.status
+    };
+  }
+
+  private mapToQuoteExtended(data: any): QuoteExtended {
+    return {
+        ...this.mapToQuote(data), 
+        placement: data.placement || "", 
+        color: data.color || "",       
+        size: data.size || 0,          
+        images: data.images || [],     
     };
   }
 
