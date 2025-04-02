@@ -31,16 +31,29 @@ export class AuthApi implements AuthRepository {
     return { id: data.id, token: data.token, isTattooArtist: data.isTattooArtist, profilePicture: data.profilePicture };
   }
 
-  async signUp(userData: UserRequest): Promise<{ id:number }> {
+  async signUp(userData: UserRequest, profileImage: File | null): Promise<{ id: number }> {
+    const formData = new FormData();
+    const jsonBlob = new Blob([JSON.stringify(userData)], { type: "application/json" });
+    formData.append("request", jsonBlob);
+  
+    if (profileImage) {
+      formData.append("profile_img", profileImage);
+    }
+    console.log("request:", formData.get("request"));
+    console.log("profile_img:", formData.get("profile_img"));
     const response = await fetch("http://localhost:8089/user/register", {
       method: "POST",
-      body: JSON.stringify(userData),
-      headers: { "Content-Type": "application/json" },
+      body: formData, 
     });
-
+  
+    if (!response.ok) {
+      throw new Error('Erro ao registrar usuário');
+    }
+  
     const data = await response.json();
-    return { id:data.id };
+    return { id: data.id };
   }
+  
 
 // falta implementar o logout
   async logout(): Promise<void> {

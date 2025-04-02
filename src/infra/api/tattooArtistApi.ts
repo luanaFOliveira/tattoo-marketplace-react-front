@@ -24,32 +24,60 @@ export class TattooArtistApi implements TattooArtistRepository {
         return data.map((artist: any) => this.mapToTattooArtist(artist));
     }
 
-    async registerTattooArtist(data: TattooArtistRequest, images: File[] = []): Promise<{ id:number }> {
+    async registerTattooArtist(data: TattooArtistRequest, profilePicture: File | null): Promise<{ id: number }> {
       const formData = new FormData();
-  
-      formData.append("request", JSON.parse(JSON.stringify(data)));
-  
-      images.forEach((image, index) => {
-        formData.append(`images[${index}]`, image);
-      });
-
+      const jsonBlob = new Blob([JSON.stringify(data)], { type: "application/json" });
+      formData.append("request", jsonBlob);
+    
+      if (profilePicture) {
+        formData.append("profile_img", profilePicture);
+      }
+    
       const storedUser = localStorage.getItem("user");
       const token = storedUser ? JSON.parse(storedUser).token : null;
-  
+    
       const response = await fetch(`http://localhost:8089/tattoo-artist/register`, {
         method: "POST",
         body: formData,
         headers: token ? { Authorization: `Bearer ${token}` } : undefined,
       });
-  
+    
       if (!response.ok) {
         throw new Error('Erro ao registrar tatuador');
       }
-  
+    
       const responseData = await response.json();
-  
-      return { id:responseData.id };
+      
+      return { id: responseData.id };
     }
+    
+
+    // async registerTattooArtist(data: TattooArtistRequest, images: File[] = []): Promise<{ id:number }> {
+    //   const formData = new FormData();
+  
+    //   formData.append("request", JSON.parse(JSON.stringify(data)));
+  
+    //   images.forEach((image, index) => {
+    //     formData.append(`images[${index}]`, image);
+    //   });
+
+    //   const storedUser = localStorage.getItem("user");
+    //   const token = storedUser ? JSON.parse(storedUser).token : null;
+  
+    //   const response = await fetch(`http://localhost:8089/tattoo-artist/register`, {
+    //     method: "POST",
+    //     body: formData,
+    //     headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+    //   });
+  
+    //   if (!response.ok) {
+    //     throw new Error('Erro ao registrar tatuador');
+    //   }
+  
+    //   const responseData = await response.json();
+  
+    //   return { id:responseData.id };
+    // }
 
   private mapToTattooArtist(data: any): TattooArtist {
     return {

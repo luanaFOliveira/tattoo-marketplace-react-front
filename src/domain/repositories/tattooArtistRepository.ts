@@ -4,5 +4,5 @@ import { TattooArtist, TattooArtistRequest} from "@/domain/entities/tattoo-artis
 export interface TattooArtistRepository {
     getTattooArtist(id: string): Promise<TattooArtist>;
     getAllTattooArtists(): Promise<TattooArtist[]>;
-    registerTattooArtist(data: TattooArtistRequest, images: File[]): Promise<{ id:number }>;
+    registerTattooArtist(data: TattooArtistRequest, profilePicture: File): Promise<{ id:number }>;
 }
