@@ -17,7 +17,13 @@ type Props = {
 export default function TattooArtistCard({ artist }: Props) {
   return (
     <Link href={`/tattoo-artist/${artist.id}`} passHref style={{ textDecoration: "none" }}>
-      <Card sx={{ maxWidth: 345, position: "relative", p: 1, backgroundColor: "#2c2c2c", cursor: "pointer" }}>
+      <Card sx={{ maxWidth: 250, position: "relative", p: 1, backgroundColor: (theme) => theme.palette.secondary.main, cursor: "pointer" }}>
+        <CardMedia
+          component="img"
+          image={`http://localhost:8089${artist.profilePicture}`}
+          alt={artist.name}
+          sx={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "5px 0 0 5px" }}
+        />
         <CardContent>
           <Box display="flex" justifyContent="space-between" alignItems="center">
             <Typography variant="h6" component="div" color="white">

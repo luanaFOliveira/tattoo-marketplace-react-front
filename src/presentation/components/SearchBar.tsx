@@ -17,8 +17,8 @@ export default function SearchBar() {
         alignItems: 'center',
         width: { xs: '90%', sm: '70%', md: '40%', lg: '30rem' },
         borderRadius: '16px', 
-        border: '2px solid #800080', 
-        backgroundColor: '#2c2c2c',
+        border: (theme) => `2px solid ${theme.palette.primary.main}`,
+        backgroundColor: (theme) => theme.palette.secondary.main,
         mx: 'auto',
       }}
     >

@@ -12,10 +12,11 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
 import Link from "next/link";
 import { useAuth } from "@/presentation/context/AuthContext";  
 import { useRouter } from 'next/navigation'
+import HubIcon from '@mui/icons-material/Hub';
+import StreamIcon from '@mui/icons-material/Stream';
 
 const settings = ['Profile', 'Quotes', 'Logout'];
 
@@ -33,10 +34,10 @@ function Navbar() {
   };
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: '#2c2c2c' }}>
+    <AppBar position="static" sx={{ backgroundColor: (theme) => theme.palette.secondary.main }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          <StreamIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
           <Typography
             variant="h6"
             noWrap
@@ -48,11 +49,11 @@ function Navbar() {
               fontFamily: 'monospace',
               fontWeight: 700,
               letterSpacing: '.3rem',
-              color: 'purple',
+              color: (theme) => theme.palette.primary.main,
               textDecoration: 'none',
             }}
           >
-            Tattoo Marketplace
+           InkConnection
           </Typography>
 
           <Box sx={{ flexGrow: 1 }} />
@@ -61,7 +62,7 @@ function Navbar() {
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt={"User"} src={user?.profilePicture || "/static/images/avatar/2.jpg"} />
+                  <Avatar alt={"User"} src={`http://localhost:8089${user?.profilePicture}` || "/static/images/avatar/2.jpg"} />
                 </IconButton>
               </Tooltip>
               <Menu
@@ -85,7 +86,7 @@ function Navbar() {
                     handleCloseUserMenu();
                     if (setting === "Logout") logout(); 
                     if (setting === "Profile") router.push(`/user/${user?.id}`);
-                    if (setting === "Quotes") router.push(`/quotes/user/${user?.id}`);
+                    if (setting === "Quotes") router.push(`/quote/user/${user?.id}`);
                   }}>
                     <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
                   </MenuItem>
