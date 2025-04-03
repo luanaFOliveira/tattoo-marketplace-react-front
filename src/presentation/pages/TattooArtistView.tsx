@@ -87,12 +87,9 @@ export default function TattooArtistView({ tattooArtistId }: { tattooArtistId: s
           onClick={handleQuoteRequest} 
           aria-label="request-quote"
         >
-          <AddIcon sx={{ mr: 1 }} />  {/* Ícone de adição (+) */}
+          <AddIcon sx={{ mr: 1 }} />  
           Request Quote
         </Fab>
-          {/* <Button size="small" variant="contained" color="primary" onClick={handleQuoteRequest}>
-            Request quote
-          </Button> */}
         </CardActions>
         
       </Card>
