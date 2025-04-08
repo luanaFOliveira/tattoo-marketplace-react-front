@@ -23,7 +23,8 @@ export class AuthApi implements AuthRepository {
         id: data.id, 
         token: data.token, 
         isTattooArtist: data.isTattooArtist,
-        profilePicture: data.profilePicture
+        profilePicture: data.profilePicture,
+        expiresAt: Date.now() + data.expiresIn,
     };
   
     this.loginFn(user);
