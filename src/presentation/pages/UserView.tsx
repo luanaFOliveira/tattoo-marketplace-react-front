@@ -16,7 +16,7 @@ import EditUserModal from "@/presentation/components/EditUserModal";
 import { TattooArtist } from "@/domain/entities/tattoo-artist";
 import { GetTattooArtistUseCase } from "@/application/tattoo-artist/getTattooArtistUseCase";
 import { GetUserUseCase } from "@/application/user/getUserUseCase";
-
+import TattooArtistTab from "@/presentation/components/TattooArtistTab";
 
 
 export default function UserView({ userId }: { userId: string }) {
@@ -108,22 +108,26 @@ export default function UserView({ userId }: { userId: string }) {
           <Typography variant="body1" color="white" fontWeight="bold">
             <EmailIcon/> {userData.email}
           </Typography>
-        </Box>
-        {user?.isTattooArtist && "categories" in userData && userData.categories && (
+          {user?.isTattooArtist && "categories" in userData && userData.categories && (
           <Box mt={2} display="flex" flexWrap="wrap" gap={1}>
             {userData.categories.map((category, index) => (
               <Chip
                 key={index}
-                label={`#${category.name}`}
+                label={`${category.name}`}
                 color="primary"
                 variant="filled"
               />
             ))}
           </Box>
         )}
+        </Box>
       </Box>
     </Box>
-    <QuoteList/>
+    {user?.isTattooArtist ? (
+      <TattooArtistTab />
+    ) : (
+      <QuoteList />
+    )}
     <EditUserModal
       user={userData}
       open={openModal}
