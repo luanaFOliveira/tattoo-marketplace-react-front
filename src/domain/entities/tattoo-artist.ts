@@ -1,5 +1,5 @@
 import { Category } from './category';
-import { UserRequest } from './user';
+import { UpdateUserRequest, UserRequest } from './user';
 
 export interface TattooArtist {
     id: number;
@@ -17,4 +17,9 @@ export interface TattooArtist {
   
 export interface TattooArtistRequest extends UserRequest {
     categoryIds: number[];
+}
+
+export interface UpdateTattooArtistRequest extends UpdateUserRequest {
+    categoryIds: number[];
+    rate: number;
 }

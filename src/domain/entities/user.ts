@@ -24,6 +24,15 @@ export interface UserRequest {
     age: number;
     location: string;
 }
+
+export interface UpdateUserRequest {
+    name: string;
+    email: string;
+    password: string;
+    passwordConfirm: string;
+    age: number;
+    location: string;
+}
   
 export interface LoginRequest {
     email: string;

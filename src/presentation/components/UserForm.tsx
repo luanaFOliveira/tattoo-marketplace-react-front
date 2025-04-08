@@ -5,20 +5,20 @@ import { TextField, Button, CircularProgress, Box, FormControl, FormLabel, Radio
 import MultiSelect from "@/presentation/components/MultiSelect";
 import { Category } from "@/domain/entities/category";
 import { CategoryApi } from "@/infra/api/categoryApi";
-import { UserRequest } from "@/domain/entities/user";
-import { TattooArtistRequest } from "@/domain/entities/tattoo-artist";
+import { UpdateUserRequest, UserDetail, UserRequest } from "@/domain/entities/user";
+import { TattooArtist, TattooArtistRequest, UpdateTattooArtistRequest } from "@/domain/entities/tattoo-artist";
 import { useRouter } from 'next/navigation'
 
 
 type UserType = "user" | "tattooArtist";
 
 interface Props {
-  initialUserType: UserType;
-  initialRegisterUseCase: any;
+  userType: UserType;
+  registerUseCase: any;
+  existingUser?: UserDetail | TattooArtist;
 }
 
-
-export default function UserRegisterForm({ initialUserType, initialRegisterUseCase }: Props) {
+export default function UserRegisterForm({ userType, registerUseCase, existingUser }: Props) {
   const [userData, setUserData] = useState<UserRequest | TattooArtistRequest>({
     name: "",
     email: "",
@@ -26,11 +26,9 @@ export default function UserRegisterForm({ initialUserType, initialRegisterUseCa
     passwordConfirm: "",
     age: 0,
     location: "",
-    ...(initialUserType === "tattooArtist" && { categoryIds: [] }),
+    ...(userType === "tattooArtist" && { categoryIds: [] }),
   });
 
-  const [userType, setUserType] = useState<UserType>(initialUserType);
-  const [registerUseCase, setRegisterUseCase] = useState<any>(initialRegisterUseCase);
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>("/image_placeholder.jpg");
   const [loading, setLoading] = useState(false);
@@ -52,6 +50,34 @@ export default function UserRegisterForm({ initialUserType, initialRegisterUseCa
       fetchCategories();
     }
   }, [userType]);
+
+  useEffect(() => {
+    if (existingUser) {
+      const baseData = {
+        name: existingUser.name,
+        email: existingUser.email,
+        password: "", 
+        passwordConfirm: "",
+        age: existingUser.age,
+        location: existingUser.location,
+      };
+  
+      if (userType === "tattooArtist") {
+        setUserData({
+          ...baseData,
+          categoryIds: (existingUser as TattooArtist).categories?.map(c => c.id) ?? [],
+        } as TattooArtistRequest);
+      } else {
+        setUserData(baseData as UserRequest);
+      }
+  
+      if (existingUser.profilePicture) {
+        const baseUrl = "http://localhost:8089"; 
+        setImagePreview(`${baseUrl}${existingUser.profilePicture}`);
+      }
+    }
+  }, [existingUser, userType]);
+  
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -83,31 +109,41 @@ export default function UserRegisterForm({ initialUserType, initialRegisterUseCa
 
   const handleSignUp = async () => {
     setLoading(true);
-
-    if (userData.password !== userData.passwordConfirm) {
+  
+    if (!existingUser && userData.password !== userData.passwordConfirm) {
       toast.error("As senhas não coincidem.");
       setLoading(false);
       return;
     }
-
+  
     if (isNaN(userData.age) || userData.age <= 0) {
       toast.error("Idade inválida.");
       setLoading(false);
       return;
     }
-
+  
     try {
-      const { id } = await registerUseCase.execute(userData, profileImage);
-      console.log(`${userType} cadastrado:`, id);
-      toast.success("Cadastro realizado com sucesso.");
-      router.push("/login");
+      let id;
+  
+      if (existingUser) {
+        const result = await registerUseCase.execute(existingUser.id,userData, profileImage);
+        toast.success("Usuário atualizado com sucesso.");
+        router.push(`/user/${result.id}`);
+      } else {
+        const result = await registerUseCase.execute(userData, profileImage);
+        id = result.id;
+        toast.success("Cadastro realizado com sucesso.");
+        router.push("/login");
+      }
+  
     } catch (error) {
-      console.error("Erro no cadastro:", error);
-      toast.error("Erro ao cadastrar usuário.");
+      console.error("Erro:", error);
+      toast.error(existingUser ? "Erro ao atualizar usuário." : "Erro ao cadastrar usuário.");
     } finally {
       setLoading(false);
     }
   };
+  
 
   return (
     <div>
@@ -134,7 +170,7 @@ export default function UserRegisterForm({ initialUserType, initialRegisterUseCa
           }}
         >
           {imagePreview && (
-            <Avatar src={imagePreview} sx={{ width: 180, height: 180, border: "2px solid gray" }} />
+            <Avatar src={imagePreview} sx={{ width: 150, height: 150, border: "2px solid gray" }} />
           )}
           <Button variant="contained" component="label">
             Escolher Foto de Perfil
@@ -179,8 +215,16 @@ export default function UserRegisterForm({ initialUserType, initialRegisterUseCa
             </Box>
           )}
   
-          <Button onClick={handleSignUp} variant="contained" color="primary" fullWidth disabled={loading}>
-            {loading ? <CircularProgress size={24} /> : "Cadastrar"}
+          <Button
+            onClick={handleSignUp}
+            variant="contained"
+            color="primary"
+            fullWidth
+            disabled={loading}
+          >
+            {loading ? (
+              <CircularProgress size={24} />
+            ) : existingUser ? "Salvar Alterações" : "Cadastrar"}
           </Button>
         </Box>
       </Box>

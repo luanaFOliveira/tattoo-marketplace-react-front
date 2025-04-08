@@ -62,7 +62,7 @@ export default function QuoteList() {
 
   return (<>
     <Grid container spacing={1}  direction="row" justifyContent="center" alignItems="center">
-        <Typography variant="h4" color="white" fontWeight="bold">
+        <Typography variant="h4" color="white" fontWeight="bold" mt={2}>
             My Quotes
         </Typography>
         {/* <StatusFilterButton onFilterChange={handleFilterChange} /> */}

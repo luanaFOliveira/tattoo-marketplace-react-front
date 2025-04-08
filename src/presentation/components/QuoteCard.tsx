@@ -18,7 +18,7 @@ export default function QuoteCard({ quote, onClick }: Props) {
           maxWidth: 345,
           position: "relative",
           p: 1,
-          backgroundColor: "secondary",
+          backgroundColor: (theme) => theme.palette.secondary.main,
           cursor: "pointer",
         }}
         onClick={onClick}

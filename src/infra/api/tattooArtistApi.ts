@@ -1,5 +1,5 @@
 import { TattooArtistRepository } from "@/domain/repositories/tattooArtistRepository";
-import { TattooArtist, TattooArtistRequest } from "@/domain/entities/tattoo-artist";
+import { TattooArtist, TattooArtistRequest, UpdateTattooArtistRequest } from "@/domain/entities/tattoo-artist";
 
 export class TattooArtistApi implements TattooArtistRepository {
 
@@ -33,13 +33,10 @@ export class TattooArtistApi implements TattooArtistRepository {
         formData.append("profile_img", profilePicture);
       }
     
-      const storedUser = localStorage.getItem("user");
-      const token = storedUser ? JSON.parse(storedUser).token : null;
     
       const response = await fetch(`http://localhost:8089/tattoo-artist/register`, {
         method: "POST",
         body: formData,
-        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
       });
     
       if (!response.ok) {
@@ -50,34 +47,33 @@ export class TattooArtistApi implements TattooArtistRepository {
       
       return { id: responseData.id };
     }
+
+    async updateTattooArtist(id: string, data: UpdateTattooArtistRequest, profilePicture: File | null): Promise<TattooArtist> {
+      const formData = new FormData();
+      const jsonBlob = new Blob([JSON.stringify(data)], { type: "application/json" });
+      formData.append("request", jsonBlob);
     
-
-    // async registerTattooArtist(data: TattooArtistRequest, images: File[] = []): Promise<{ id:number }> {
-    //   const formData = new FormData();
-  
-    //   formData.append("request", JSON.parse(JSON.stringify(data)));
-  
-    //   images.forEach((image, index) => {
-    //     formData.append(`images[${index}]`, image);
-    //   });
-
-    //   const storedUser = localStorage.getItem("user");
-    //   const token = storedUser ? JSON.parse(storedUser).token : null;
-  
-    //   const response = await fetch(`http://localhost:8089/tattoo-artist/register`, {
-    //     method: "POST",
-    //     body: formData,
-    //     headers: token ? { Authorization: `Bearer ${token}` } : undefined,
-    //   });
-  
-    //   if (!response.ok) {
-    //     throw new Error('Erro ao registrar tatuador');
-    //   }
-  
-    //   const responseData = await response.json();
-  
-    //   return { id:responseData.id };
-    // }
+      if (profilePicture) {
+        formData.append("profile_img", profilePicture);
+      }
+    
+      const storedUser = localStorage.getItem("user");
+      const token = storedUser ? JSON.parse(storedUser).token : null;
+    
+      const response = await fetch(`http://localhost:8089/tattoo-artist/${id}`, {
+        method: "PUT",
+        body: formData,
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+      });
+    
+      if (!response.ok) {
+        throw new Error('Erro ao editar tatuador');
+      }
+    
+      const responseData = await response.json();
+      return this.mapToTattooArtist(responseData);
+    }
+    
 
   private mapToTattooArtist(data: any): TattooArtist {
     return {
