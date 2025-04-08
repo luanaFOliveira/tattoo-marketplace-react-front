@@ -25,7 +25,7 @@ export default function TattooArtistRegister() {
       <Grid container spacing={4} justifyContent="center" alignItems="center">
         <Grid  size={{ xs: 12, sm:6 , md: 12 }}>
           <Paper sx={{ gap: 4, padding: 4, boxShadow: 3, borderRadius: 2, height: "35rem", display: "flex", justifyContent: "center" }}>
-            <UserRegisterForm initialUserType="tattooArtist" initialRegisterUseCase={registerTattooArtistUseCase} />
+            <UserRegisterForm userType="tattooArtist" registerUseCase={registerTattooArtistUseCase} />
           </Paper>
         </Grid>
       </Grid>

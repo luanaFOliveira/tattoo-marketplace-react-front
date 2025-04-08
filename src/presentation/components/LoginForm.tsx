@@ -7,7 +7,7 @@ import { TextField, Button, CircularProgress, Box } from "@mui/material";
 import { LoginRequest, LoginResponse } from "@/domain/entities/user";
 import { useRouter } from 'next/navigation'
 import { useAuth } from "@/presentation/context/AuthContext";  
-
+import { Container, Typography, Paper } from "@mui/material";
 
 export default function LoginForm() {
   const [credentials, setCredentials] = useState<LoginRequest>({
@@ -42,35 +42,71 @@ export default function LoginForm() {
 
   return (
     <div>
-      <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-        <TextField
-          label="Email"
-          variant="outlined"
-          type="email"
-          name="email"
-          value={credentials.email}
-          onChange={handleChange}
-          fullWidth
-        />
-        <TextField
-          label="Senha"
-          variant="outlined"
-          type="password"
-          name="password"
-          value={credentials.password}
-          onChange={handleChange}
-          fullWidth
-        />
-        <Button
-          onClick={handleLogin}
-          variant="contained"
-          color="primary"
-          fullWidth
-          disabled={loading}
-        >
-          {loading ? <CircularProgress size={24} /> : "Login"}
-        </Button>
-      </Box>
+      <Paper sx={{ width: "100%", padding: 4, boxShadow: 3, borderRadius: 2, backgroundColor: (theme) => theme.palette.secondary.main }}>
+        <Box sx={{ textAlign: "center", mb: 4 }}>
+          <Typography variant="h5" color="primary">
+            BEM VINDO
+          </Typography>
+        </Box>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+          <TextField
+            label="Email"
+            variant="outlined"
+            type="email"
+            name="email"
+            value={credentials.email}
+            onChange={handleChange}
+            fullWidth
+            sx={{
+              input: { color: 'white' }, // texto digitado
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': {
+                  borderColor: 'white', // borda padrão
+                },
+                '&:hover fieldset': {
+                  borderColor: 'white', // borda ao passar o mouse
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: 'white', // borda ao focar
+                },
+              },
+            }}
+          />
+          <TextField
+            label="Senha"
+            variant="outlined"
+            type="password"
+            name="password"
+            value={credentials.password}
+            onChange={handleChange}
+            fullWidth
+            sx={{
+              input: { color: 'white' }, // texto digitado
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': {
+                  borderColor: 'white', // borda padrão
+                },
+                '&:hover fieldset': {
+                  borderColor: 'white', // borda ao passar o mouse
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: 'white', // borda ao focar
+                },
+              },
+            }}
+          />
+          <Button
+            onClick={handleLogin}
+            variant="contained"
+            color="primary"
+            fullWidth
+            disabled={loading}
+          >
+            {loading ? <CircularProgress size={24} /> : "Login"}
+          </Button>
+        </Box>
+      </Paper>
+
     </div>
   );
 }

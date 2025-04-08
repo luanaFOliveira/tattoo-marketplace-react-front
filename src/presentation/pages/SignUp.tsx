@@ -86,8 +86,8 @@ const FadeText = () => {
         <Fade in={!!userType} timeout={1000}>
           <Box sx={{ marginTop: 2, width: "100%", maxWidth: 800 }}>
             <UserForm 
-              initialUserType={userType} 
-              initialRegisterUseCase={userType === "tattooArtist" ? registerTattooArtistUseCase : signUpUseCase}
+              userType={userType} 
+              registerUseCase={userType === "tattooArtist" ? registerTattooArtistUseCase : signUpUseCase}
             />
           </Box>
         </Fade>
