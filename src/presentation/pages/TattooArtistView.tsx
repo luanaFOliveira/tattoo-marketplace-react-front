@@ -11,6 +11,8 @@ import Image from 'next/image'
 import CardActions from '@mui/material/CardActions';
 import { Fab } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add"; 
+import { GetTattooArtistUseCase } from "@/application/tattoo-artist/getTattooArtistUseCase";
+import ImageGallery from "@/presentation/components/ImageGallery";
 
 export default function TattooArtistView({ tattooArtistId }: { tattooArtistId: string }) {
   const [artist, setArtist] = useState<TattooArtist | null>(null);
@@ -18,12 +20,12 @@ export default function TattooArtistView({ tattooArtistId }: { tattooArtistId: s
   const [openModal, setOpenModal] = useState(false);
   const { user, isAuthenticated } = useAuth(); 
   const router = useRouter();
+  const getTattooArtistUseCase = new GetTattooArtistUseCase(new TattooArtistApi());
 
   useEffect(() => {
     const fetchArtist = async () => {
       try {
-        const api = new TattooArtistApi();
-        const data = await api.getTattooArtist(tattooArtistId);
+        const data = await getTattooArtistUseCase.execute(tattooArtistId);
         setArtist(data);
       } catch (error) {
         console.error("Erro ao buscar tatuador:", error);
@@ -51,6 +53,9 @@ export default function TattooArtistView({ tattooArtistId }: { tattooArtistId: s
     } else {
       setOpenModal(true);
     }
+  };
+
+  const handleAddImage = () => {
   };
 
   return (
@@ -103,25 +108,7 @@ export default function TattooArtistView({ tattooArtistId }: { tattooArtistId: s
       <Typography color="white" variant="h5" sx={{mt: 4, mb: 2, textAlign: "center", fontWeight: "bold" }}>
         Portfólio
       </Typography>
-
-      {artist.images?.length > 0 ? (
-        <Grid container spacing={2}>
-          {artist.images.map((image, index) => (
-            <Grid item xs={6} sm={4} md={3} key={index}>
-              <Box
-                component="img"
-                src={`http://localhost:8089${image}`}
-                alt={`Tattoo ${index + 1}`}
-                sx={{ width: "100%", height: 200, objectFit: "cover", borderRadius: 2 }}
-              />
-            </Grid>
-          ))}
-        </Grid>
-      ) : (
-        <Typography variant="body1" color="text.secondary" sx={{ textAlign: "center", mt: 2 }}>
-          Nenhum trabalho no portfólio ainda.
-        </Typography>
-      )}
+      <ImageGallery images={artist.images} userId={artist.id}/>
     </Box>
   );
 }

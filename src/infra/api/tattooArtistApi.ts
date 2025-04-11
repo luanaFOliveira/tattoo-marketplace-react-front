@@ -73,6 +73,34 @@ export class TattooArtistApi implements TattooArtistRepository {
       const responseData = await response.json();
       return this.mapToTattooArtist(responseData);
     }
+
+    async addPortifolioImages(id: string , images: File[] | null): Promise<TattooArtist> {
+      const formData = new FormData();
+    
+      if (images) {
+        images.forEach((image) => {
+          formData.append("images", image); 
+        });
+      }
+    
+      const storedUser = localStorage.getItem("user");
+      const token = storedUser ? JSON.parse(storedUser).token : null;
+    
+      const response = await fetch(`http://localhost:8089/tattoo-artist/portifolio/${id}`, {
+        method: "PUT",
+        body: formData,
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+      });
+    
+      if (!response.ok) {
+        throw new Error('Erro ao adicionar imagens de portifolio');
+      }
+    
+      const responseData = await response.json();
+      return this.mapToTattooArtist(responseData);
+    }
+
+
     
 
   private mapToTattooArtist(data: any): TattooArtist {

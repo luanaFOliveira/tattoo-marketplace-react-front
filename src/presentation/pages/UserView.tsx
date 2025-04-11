@@ -124,7 +124,7 @@ export default function UserView({ userId }: { userId: string }) {
       </Box>
     </Box>
     {user?.isTattooArtist ? (
-      <TattooArtistTab />
+      <TattooArtistTab images={userData.images} userId={userData.id}/>
     ) : (
       <QuoteList />
     )}

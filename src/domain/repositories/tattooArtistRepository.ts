@@ -6,4 +6,5 @@ export interface TattooArtistRepository {
     getAllTattooArtists(): Promise<TattooArtist[]>;
     registerTattooArtist(data: TattooArtistRequest, profilePicture: File): Promise<{ id:number }>;
     updateTattooArtist(id: string, data: UpdateTattooArtistRequest, profilePicture: File | null): Promise<TattooArtist>;
+    addPortifolioImages(id: string, images: File[]): Promise<TattooArtist>;
 }

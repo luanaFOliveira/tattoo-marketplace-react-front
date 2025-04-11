@@ -3,7 +3,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import QuoteList from '@/presentation/pages/QuoteList'; 
-
+import ImageGallery from './ImageGallery';
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -33,7 +33,12 @@ function a11yProps(index: number) {
   };
 }
 
-export default function TattooArtistTab() {
+type TattooArtistTabProps = {
+    images: string[];
+    userId: number;
+};
+
+export default function TattooArtistTab({ images, userId }: TattooArtistTabProps) {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -54,7 +59,7 @@ export default function TattooArtistTab() {
       </CustomTabPanel>
 
       <CustomTabPanel value={value} index={1}>
-        <Box sx={{ color: 'white' }}>Aqui vai outro componente ou conteúdo</Box>
+        <ImageGallery images={images} userId={userId} />
       </CustomTabPanel>
     </Box>
   );
