@@ -92,7 +92,7 @@ export default function QuoteRequestModal({
       const { id } = await registerQuoteUseCase.execute(quote, images);
       console.log("Quote cadastrado:", id);
       toast.success("Cadastro realizado com sucesso.");
-      onClose(); // Fechar o modal após sucesso
+      onClose(); 
     } catch (error) {
       console.error("Erro no cadastro:", error);
       toast.error("Erro ao cadastrar quote.");

@@ -8,6 +8,7 @@ import { QuoteApi } from "@/infra/api/quoteApi";
 import { QuoteExtended } from "@/domain/entities/quote";
 import CircularProgress from "@mui/material/CircularProgress";
 import { toast } from "react-toastify";
+import { GetQuoteUseCase } from "@/application/quote/getQuoteUseCase";
 
 const style = {
   position: "absolute",
@@ -32,12 +33,12 @@ export default function QuoteViewModal({
 }) {
   const [quote, setQuote] = useState<QuoteExtended | null>(null);
   const [loading, setLoading] = useState(false);
+  const getQuoteUseCase = new GetQuoteUseCase(new QuoteApi());
 
   useEffect(() => {
     const fetchQuote = async () => {
       try {
-        const api = new QuoteApi();
-        const data = await api.getQuote(quoteId);
+        const data = await getQuoteUseCase.execute(quoteId);
         setQuote(data);
       } catch (error) {
         console.error("Erro ao buscar orçamento:", error);

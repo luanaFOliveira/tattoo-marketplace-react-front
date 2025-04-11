@@ -8,6 +8,8 @@ import { Quote } from "@/domain/entities/quote";
 import { useAuth } from "@/presentation/context/AuthContext";  
 import QuoteViewModal from "@/presentation/components/QuoteViewModal";
 import StatusFilterButton from "@/presentation/components/StatusFilterButton";
+import { GetAllQuotesByUserUseCase } from "@/application/quote/getAllQuotesByUserUseCase";
+import { GetAllQuotesByTattooArtistUseCase } from "@/application/quote/getAllQuotesByTattooArtistUseCase";
 
 export default function QuoteList() {
   const [quotes, setQuotes] = useState<Quote[]>([]);
@@ -16,6 +18,8 @@ export default function QuoteList() {
   const [selectedQuoteId, setSelectedQuoteId] = useState<number | null>(null);
   const [open, setOpen] = useState(false);
   const [filteredQuotes, setFilteredQuotes] = useState<Quote[]>([]);
+  const getAllQuotesByUserUseCase = new GetAllQuotesByUserUseCase(new QuoteApi());
+  const getAllQuotesByTattooArtistUseCase = new GetAllQuotesByTattooArtistUseCase(new QuoteApi());
 
   const handleOpenModal = (quoteId: number) => {
     setSelectedQuoteId(quoteId);
@@ -32,11 +36,11 @@ export default function QuoteList() {
       try {
         const api = new QuoteApi();
         if (user?.isTattooArtist){
-            const data = await api.getAllQuotesByTattooArtist();
-            setQuotes(data);
+          const data = await getAllQuotesByTattooArtistUseCase.execute();
+          setQuotes(data);
         }else{
-            const data = await api.getAllQuotesByUser();
-            setQuotes(data);
+          const data = await getAllQuotesByUserUseCase.execute();
+          setQuotes(data);
         }
       } catch (error) {
         console.error("Erro ao buscar quotes:", error);
