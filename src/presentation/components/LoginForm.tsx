@@ -58,16 +58,16 @@ export default function LoginForm() {
             onChange={handleChange}
             fullWidth
             sx={{
-              input: { color: 'white' }, // texto digitado
+              input: { color: 'white' }, 
               '& .MuiOutlinedInput-root': {
                 '& fieldset': {
-                  borderColor: 'white', // borda padrão
+                  borderColor: 'white', 
                 },
                 '&:hover fieldset': {
-                  borderColor: 'white', // borda ao passar o mouse
+                  borderColor: 'white', 
                 },
                 '&.Mui-focused fieldset': {
-                  borderColor: 'white', // borda ao focar
+                  borderColor: 'white', 
                 },
               },
             }}
@@ -81,16 +81,16 @@ export default function LoginForm() {
             onChange={handleChange}
             fullWidth
             sx={{
-              input: { color: 'white' }, // texto digitado
+              input: { color: 'white' }, 
               '& .MuiOutlinedInput-root': {
                 '& fieldset': {
-                  borderColor: 'white', // borda padrão
+                  borderColor: 'white', 
                 },
                 '&:hover fieldset': {
-                  borderColor: 'white', // borda ao passar o mouse
+                  borderColor: 'white', 
                 },
                 '&.Mui-focused fieldset': {
-                  borderColor: 'white', // borda ao focar
+                  borderColor: 'white', 
                 },
               },
             }}

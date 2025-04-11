@@ -4,7 +4,7 @@ import { TattooArtistRepository } from "@/domain/repositories/tattooArtistReposi
 export class GetAllTattooArtistUseCase {
   constructor(private tattooArtistRepository: TattooArtistRepository) {}
 
-  async execute(id: string): Promise<TattooArtist[]> {
+  async execute(): Promise<TattooArtist[]> {
     return await this.tattooArtistRepository.getAllTattooArtists();
   }
 }

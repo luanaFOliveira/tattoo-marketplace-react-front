@@ -3,6 +3,7 @@ export interface User {
     token: string; 
     isTattooArtist: boolean;
     profilePicture: string;
+    expiresAt: number;
 }
 
 export interface UserDetail {

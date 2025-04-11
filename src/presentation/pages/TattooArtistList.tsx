@@ -5,16 +5,17 @@ import Grid from '@mui/material/Grid2';
 import TattooArtistCard from "@/presentation/components/TattooArtistCard";
 import { TattooArtist } from "@/domain/entities/tattoo-artist";
 import { TattooArtistApi } from "@/infra/api/tattooArtistApi";
+import { GetAllTattooArtistUseCase } from "@/application/tattoo-artist/getAllTattooArtistUseCase";
 
 export default function TattooArtistList() {
   const [artists, setArtists] = useState<TattooArtist[]>([]);
   const [loading, setLoading] = useState(true);
+  const getAllTattooArtistUseCase = new GetAllTattooArtistUseCase(new TattooArtistApi());
 
   useEffect(() => {
     const fetchArtists = async () => {
       try {
-        const api = new TattooArtistApi();
-        const data = await api.getAllTattooArtists();
+        const data = await getAllTattooArtistUseCase.execute();
         setArtists(data);
       } catch (error) {
         console.error("Erro ao buscar tatuadores:", error);

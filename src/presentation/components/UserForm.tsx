@@ -8,6 +8,7 @@ import { CategoryApi } from "@/infra/api/categoryApi";
 import { UpdateUserRequest, UserDetail, UserRequest } from "@/domain/entities/user";
 import { TattooArtist, TattooArtistRequest, UpdateTattooArtistRequest } from "@/domain/entities/tattoo-artist";
 import { useRouter } from 'next/navigation'
+import { GetAllCategoriesUseCase } from "@/application/category/getAllCategoriesUseCase";
 
 
 type UserType = "user" | "tattooArtist";
@@ -34,14 +35,14 @@ export default function UserRegisterForm({ userType, registerUseCase, existingUs
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const router = useRouter();
+  const getAllCategoriesUseCase = new GetAllCategoriesUseCase(new CategoryApi());
   
 
   useEffect(() => {
     if (userType === "tattooArtist") {
       const fetchCategories = async () => {
         try {
-          const api = new CategoryApi();
-          const data = await api.getAllCategories();
+          const data = await getAllCategoriesUseCase.execute();
           setCategories(data);
         } catch (error) {
           console.error("Erro ao buscar categorias:", error);
