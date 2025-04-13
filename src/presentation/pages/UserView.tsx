@@ -20,7 +20,7 @@ import TattooArtistTab from "@/presentation/components/TattooArtistTab";
 
 
 export default function UserView({ userId }: { userId: string }) {
-  const [userData, setUserData] = useState<UserDetail | TattooArtist|null>(null);
+  const [userData, setUserData] = useState< UserDetail | TattooArtist |null>(null);
   const [loading, setLoading] = useState(true);
   const [openModal, setOpenModal] = useState(false);
   const { user, isAuthenticated } = useAuth(); 
@@ -37,26 +37,28 @@ export default function UserView({ userId }: { userId: string }) {
   };
 
   useEffect(() => {
+    if (!user) return; 
+  
     const fetchUser = async () => {
       try {
-        if(user?.isTattooArtist){
+        if (user.isTattooArtist) {
           const data = await getTattooArtistUseCase.execute(userId);
           setUserData(data);
-        }else{
+        } else {
           const data = await getUserUseCase.execute(userId);
           setUserData(data);
         }
       } catch (error) {
-        console.error("Erro ao buscar tatuador:", error);
-        toast.error("Erro ao buscar tatuador");
+        console.error("Erro ao buscar usuário:", error);
+        toast.error("Erro ao buscar usuário");
       } finally {
         setLoading(false);
-       
       }
     };
-
+  
     fetchUser();
-  }, [userId]);
+  }, [userId, user]); 
+  
 
   if (loading) {
     return <CircularProgress sx={{ display: "block", margin: "auto", mt: 5 }} />;
@@ -123,8 +125,8 @@ export default function UserView({ userId }: { userId: string }) {
         </Box>
       </Box>
     </Box>
-    {user?.isTattooArtist ? (
-      <TattooArtistTab images={userData.images} userId={userData.id}/>
+    {user?.isTattooArtist && "images" in userData ? (
+      <TattooArtistTab images={userData.images} userId={userData.id} />
     ) : (
       <QuoteList />
     )}

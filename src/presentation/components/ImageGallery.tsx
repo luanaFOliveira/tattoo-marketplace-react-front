@@ -6,6 +6,10 @@ import Grid from '@mui/material/Grid2';
 import { toast } from 'react-toastify';
 import { TattooArtistApi } from '@/infra/api/tattooArtistApi';
 import { AddPortifolioImagesUseCase } from '@/application/tattoo-artist/addPortifolioImagesUseCase';
+import { Dialog, DialogContent } from '@mui/material';
+import { Fab } from "@mui/material";
+import AddIcon from '@mui/icons-material/Add';
+
 
 type ImageGalleryProps = {
   images: string[];
@@ -15,6 +19,7 @@ type ImageGalleryProps = {
 export default function ImageGallery({ images: initialImages, userId }: ImageGalleryProps) {
   const [images, setImages] = useState<string[]>(initialImages);
   const [loading, setLoading] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const addPortifolioImagesUseCase = new AddPortifolioImagesUseCase(new TattooArtistApi());
 
@@ -28,7 +33,7 @@ export default function ImageGallery({ images: initialImages, userId }: ImageGal
       const updatedUser = await addPortifolioImagesUseCase.execute(userId.toString(), selectedFiles);
 
       toast.success("Imagem(ns) enviada(s) com sucesso!");
-
+      window.location.reload();
       setImages(updatedUser.images);
     } catch (err) {
       console.error("Erro ao enviar imagens:", err);
@@ -45,34 +50,15 @@ export default function ImageGallery({ images: initialImages, userId }: ImageGal
   return (
     <Box>
       <Grid container spacing={2}>
-        {images.map((img, index) => (
-          <Grid size={{ xs: 12, sm: 6, md: 4 }} key={index}>
-            <Card>
-              <CardMedia
-                component="img"
-                height="200"
-                image={`http://localhost:8089${img}`}
-                alt={`Image ${index + 1}`}
-              />
-              <CardContent>
-                <Typography variant="body2" color="text.secondary">
-                  Image {index + 1}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-
-        <Grid size={{ xs: 12 }}>
-          <Button
-            variant="outlined"
-            startIcon={<AddPhotoAlternateIcon />}
+        <Grid size={{ xs: 12 }} display="flex" justifyContent="flex-end">
+            <Fab
+            color="primary"
+            aria-label="edit"
+            variant="extended"
             onClick={triggerFileSelect}
-            fullWidth
-            disabled={loading}
-          >
-            {loading ? <CircularProgress size={24} /> : 'Adicionar Nova Foto'}
-          </Button>
+            >
+                <AddIcon sx={{ mr: 1 }} /> Adicionar Foto
+            </Fab>
           <input
             ref={inputRef}
             type="file"
@@ -81,7 +67,34 @@ export default function ImageGallery({ images: initialImages, userId }: ImageGal
             onChange={handleSelectImages}
           />
         </Grid>
+
+        {images?.map((img, index) => (
+          <Grid size={{ xs: 12, sm: 6, md: 4 }} key={index}>
+            <Card>
+            <CardMedia
+                component="img"
+                image={`http://localhost:8089${img}`}
+                sx={{
+                    height: 200,
+                    width: '100%',
+                    objectFit: 'cover',
+                    cursor: 'pointer',
+                }}
+                onClick={() => setSelectedImage(img)}
+            />
+            </Card>
+          </Grid>
+        ))}
+
       </Grid>
+      <Dialog open={!!selectedImage} onClose={() => setSelectedImage(null)} maxWidth="md">
+        <DialogContent sx={{ p: 0 }}>
+            <img
+            src={`http://localhost:8089${selectedImage}`}
+            style={{ width: '100%', height: 'auto', display: 'block' }}
+            />
+        </DialogContent>
+      </Dialog>
     </Box>
   );
 }

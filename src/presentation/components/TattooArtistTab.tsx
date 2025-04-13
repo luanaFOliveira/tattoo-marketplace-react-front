@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -48,19 +49,34 @@ export default function TattooArtistTab({ images, userId }: TattooArtistTabProps
   return (
     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab label="Quotes" {...a11yProps(0)} />
-          <Tab label="Outros dados" {...a11yProps(1)} />
-        </Tabs>
-      </Box>
+      <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+        <Tab
+            label="Portifolio"
+            {...a11yProps(0)}
+            sx={{
+            color: value === 0 ? 'primary.main' : 'white',
+            fontWeight: value === 0 ? 'bold' : 'normal',
+            }}
+        />
+        <Tab
+            label="Quotes"
+            {...a11yProps(1)}
+            sx={{
+            color: value === 1 ? 'primary.main' : 'white',
+            fontWeight: value === 1 ? 'bold' : 'normal',
+            }}
+        />
+      </Tabs>
 
+    </Box>
       <CustomTabPanel value={value} index={0}>
+        <ImageGallery images={images} userId={userId} />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={1}>
         <QuoteList />
       </CustomTabPanel>
 
-      <CustomTabPanel value={value} index={1}>
-        <ImageGallery images={images} userId={userId} />
-      </CustomTabPanel>
+      
     </Box>
   );
 }
