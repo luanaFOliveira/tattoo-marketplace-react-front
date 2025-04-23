@@ -1,3 +1,4 @@
+'use client';
 import * as React from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -5,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { Quote } from "@/domain/entities/quote";
 import StatusChip from "@/presentation/components/StatusChip";
+import { useAuth } from "@/presentation/context/AuthContext";
 
 type Props = {
   quote: Quote;
@@ -12,6 +14,7 @@ type Props = {
 };
 
 export default function QuoteCard({ quote, onClick }: Props) {
+  const { user } = useAuth();
     return (
       <Card
         sx={{
@@ -25,9 +28,11 @@ export default function QuoteCard({ quote, onClick }: Props) {
       >
         <CardContent>
           <Box display="flex" justifyContent="space-between" alignItems="center">
-            <Typography variant="h6" component="div" color="white">
-              {quote.tattooArtist.name}
-            </Typography>
+            {user?.isTattooArtist ? (
+              <Typography color="white"><strong>From:</strong> {quote?.user?.name}</Typography>
+            ) : (
+              <Typography color="white"><strong>To:</strong> {quote?.tattooArtist?.name}</Typography>
+            )}
             <StatusChip status={quote.status.name} /> 
           </Box>
           <Box display="flex" alignItems="center">

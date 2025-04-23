@@ -34,7 +34,6 @@ export default function QuoteList() {
   useEffect(() => {
     const fetchQuotes = async () => {
       try {
-        const api = new QuoteApi();
         if (user?.isTattooArtist){
           const data = await getAllQuotesByTattooArtistUseCase.execute();
           setQuotes(data);

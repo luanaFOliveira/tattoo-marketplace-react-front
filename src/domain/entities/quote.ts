@@ -32,3 +32,8 @@ export interface QuoteExtended {
     status: Status;
     images: string[];
 }
+
+export interface UpdateQuote {
+    price: number;
+    statusId: number;
+}

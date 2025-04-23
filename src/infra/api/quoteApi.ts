@@ -1,4 +1,4 @@
-import { Quote, QuoteExtended, QuoteRequest } from "@/domain/entities/quote";
+import { Quote, QuoteExtended, QuoteRequest, UpdateQuote } from "@/domain/entities/quote";
 import { QuoteRepository } from "@/domain/repositories/quoteRepository";
 
 export class QuoteApi implements QuoteRepository {
@@ -25,6 +25,10 @@ export class QuoteApi implements QuoteRepository {
           method: "GET",
           headers: { "Content-Type": "application/json" , Authorization: `Bearer ${token}`},
         });
+
+        if (!response.ok) {
+          throw new Error('Erro ao buscar quotes por usuario');
+        }
     
         const data = await response.json();
     
@@ -39,10 +43,15 @@ export class QuoteApi implements QuoteRepository {
         method: "GET",
         headers: { "Content-Type": "application/json" , Authorization: `Bearer ${token}`},
       });
+
+      if (!response.ok) {
+        throw new Error('Erro ao buscar quotes por tatuador');
+      }
+  
   
       const data = await response.json();
   
-      return data.map((artist: any) => this.mapToQuote(artist));
+      return data.map((quote: any) => this.mapToQuote(quote));
   }
 
     async registerQuote(data: QuoteRequest, images: File[] = []): Promise<{ id:number }> {
@@ -71,6 +80,30 @@ export class QuoteApi implements QuoteRepository {
   
       return { id:responseData.id };
     }
+
+    async updateQuote(id: string, data: UpdateQuote): Promise<Quote> {
+      const storedUser = localStorage.getItem("user");
+      const token = storedUser ? JSON.parse(storedUser).token : null;
+    
+      const response = await fetch(`http://localhost:8089/quote/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token && { Authorization: `Bearer ${token}` }),
+        },
+        body: JSON.stringify(data),
+      });
+    
+      if (!response.ok) {
+        throw new Error("Erro ao atualizar quote");
+      }
+    
+      const responseData = await response.json();
+    
+      return this.mapToQuote(responseData);
+    }
+    
+
 
   private mapToQuote(data: any): Quote {
     return {

@@ -1,4 +1,4 @@
-import { Quote, QuoteExtended, QuoteRequest} from "@/domain/entities/quote";
+import { Quote, QuoteExtended, QuoteRequest, UpdateQuote} from "@/domain/entities/quote";
 
 
 export interface QuoteRepository {
@@ -6,4 +6,5 @@ export interface QuoteRepository {
     getAllQuotesByUser(): Promise<Quote[]>;
     getAllQuotesByTattooArtist(): Promise<Quote[]>;
     registerQuote(data: QuoteRequest, images: File[]): Promise<{ id:number }>;
+    updateQuote(id: string, data: UpdateQuote): Promise<Quote>;
 }

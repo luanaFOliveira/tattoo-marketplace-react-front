@@ -4,7 +4,7 @@ import { StatusRepository } from "@/domain/repositories/statusRepository";
 export class GetAllStatusUseCase {
   constructor(private statusRepository: StatusRepository) {}
 
-  async execute(id: string): Promise<Status[]> {
+  async execute(): Promise<Status[]> {
     return await this.statusRepository.getAllStatus();
   }
 }
