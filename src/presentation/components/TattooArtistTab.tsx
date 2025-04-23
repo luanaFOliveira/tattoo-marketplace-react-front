@@ -70,7 +70,7 @@ export default function TattooArtistTab({ images, userId }: TattooArtistTabProps
 
     </Box>
       <CustomTabPanel value={value} index={0}>
-        <ImageGallery images={images} userId={userId} />
+        <ImageGallery images={images} userId={userId} showAddButton={true} />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
         <QuoteList />

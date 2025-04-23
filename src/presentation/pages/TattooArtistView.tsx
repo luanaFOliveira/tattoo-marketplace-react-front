@@ -105,10 +105,10 @@ export default function TattooArtistView({ tattooArtistId }: { tattooArtistId: s
         onClose={() => setOpenModal(false)} 
       />
 
-      <Typography color="white" variant="h5" sx={{mt: 4, mb: 2, textAlign: "center", fontWeight: "bold" }}>
+      <Typography color="white" variant="h5" sx={{mt: 4, mb: 1, textAlign: "center", fontWeight: "bold" }}>
         Portfólio
       </Typography>
-      <ImageGallery images={artist.images} userId={artist.id}/>
+      <ImageGallery images={artist.images} userId={artist.id} showAddButton={false}/>
     </Box>
   );
 }

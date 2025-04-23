@@ -16,9 +16,9 @@ export default function StatusChip({ status }: StatusChipProps) {
       string,
       { label: string; bgColor: string; textColor: string; icon: React.ReactElement }
     > = {
-      pending: { label: "PENDING", bgColor: "yellow", textColor: "black", icon: <AccessTimeIcon /> },
-      approved: { label: "APPROVED", bgColor: "green", textColor: "white", icon: <CheckCircleIcon /> },
-      rejected: { label: "REJECTED", bgColor: "red", textColor: "white", icon: <CancelIcon /> },
+      pending: { label: "PENDING", bgColor: "yellow", textColor: "black", icon: <AccessTimeIcon sx={{color:"black"}} /> },
+      approved: { label: "APPROVED", bgColor: "green", textColor: "white", icon: <CheckCircleIcon sx={{color:"white"}}  /> },
+      rejected: { label: "REJECTED", bgColor: "red", textColor: "white", icon: <CancelIcon sx={{color:"white"}} /> },
     };
   
     const { label, bgColor, textColor, icon } = statusConfig[normalizedStatus] || {
@@ -36,6 +36,9 @@ export default function StatusChip({ status }: StatusChipProps) {
         sx={{
           backgroundColor: bgColor,
           color: textColor,
+          "& .MuiChip-icon": {
+            color: textColor, 
+          },
         }}
       />
     );

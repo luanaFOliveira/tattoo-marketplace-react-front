@@ -14,9 +14,10 @@ import AddIcon from '@mui/icons-material/Add';
 type ImageGalleryProps = {
   images: string[];
   userId: number;
+  showAddButton?: boolean;
 };
 
-export default function ImageGallery({ images: initialImages, userId }: ImageGalleryProps) {
+export default function ImageGallery({ images: initialImages, userId, showAddButton }: ImageGalleryProps) {
   const [images, setImages] = useState<string[]>(initialImages);
   const [loading, setLoading] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -50,24 +51,25 @@ export default function ImageGallery({ images: initialImages, userId }: ImageGal
   return (
     <Box>
       <Grid container spacing={2}>
-        <Grid size={{ xs: 12 }} display="flex" justifyContent="flex-end">
+        {showAddButton && (
+          <Grid size={{ xs: 12 }} display="flex" justifyContent="flex-end">
             <Fab
-            color="primary"
-            aria-label="edit"
-            variant="extended"
-            onClick={triggerFileSelect}
+              color="primary"
+              aria-label="edit"
+              variant="extended"
+              onClick={triggerFileSelect}
             >
-                <AddIcon sx={{ mr: 1 }} /> Adicionar Foto
+              <AddIcon sx={{ mr: 1 }} /> Adicionar Foto
             </Fab>
-          <input
-            ref={inputRef}
-            type="file"
-            multiple
-            hidden
-            onChange={handleSelectImages}
-          />
-        </Grid>
-
+            <input
+              ref={inputRef}
+              type="file"
+              multiple
+              hidden
+              onChange={handleSelectImages}
+            />
+          </Grid>
+        )}
         {images?.map((img, index) => (
           <Grid size={{ xs: 12, sm: 6, md: 4 }} key={index}>
             <Card>
