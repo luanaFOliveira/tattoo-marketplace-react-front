@@ -9,6 +9,9 @@ export default function Home() {
     <main>
       <Container maxWidth="xl" sx={{marginTop: 5 }}>
         <Stack spacing={4}>  
+          <Typography variant="h4" color="primary" align="center">
+            Find the perfect tattoo artist for your next piece
+          </Typography>
           <SearchBar />
           <TattooArtistList />
         </Stack>

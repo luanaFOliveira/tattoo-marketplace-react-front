@@ -14,6 +14,8 @@ import { RegisterTattooArtistUseCase } from "@/application/tattoo-artist/registe
 import { TattooArtistApi } from "@/infra/api/tattooArtistApi";
 import { useAuth } from "@/presentation/context/AuthContext"; 
 
+import BaseHomePage from "@/presentation/pages/BaseHomePage";
+
 const FadeText = () => {
   const [visible, setVisible] = useState(false);
   const [userType, setUserType] = useState<"user" | "tattooArtist" | null>(null);
@@ -42,45 +44,45 @@ const FadeText = () => {
         textAlign: "center",
       }}
     >
-      <Fade in={visible} timeout={1000}>
-        <Typography variant="h4" color="primary">
-          Welcome to Ink Connection!
-        </Typography>
-      </Fade>
-
-      <Fade in={visible} timeout={1000} style={{ transitionDelay: '1.5s' }}>
-        <Typography variant="h5" color="primary" sx={{ marginTop: 2 }}>
+      <Typography variant="h5" color="#d1d1d1" sx={{ marginTop: 0 }}>
+        SignUp
+      </Typography>
+      <Fade in={visible} timeout={100} style={{ transitionDelay: '1.5s' }}>
+        <Typography variant="h5" color="#d1d1d1" sx={{ marginTop: 1 }}>
           Are you a Tattoo Artist?
         </Typography>
       </Fade>
+      <Fade in={visible} timeout={100} style={{ transitionDelay: '1.5s' }}>
+        <Box sx={{ display: "flex", justifyContent: "center", gap: 4, marginTop: 2 }}>
+          <Fab
+            variant="extended"
+            sx={{ 
+              backgroundColor: "#9932cc", 
+              color: "#ffffff",             
+              "&:hover": { backgroundColor: "#b44ee6" } 
+            }}
+            onClick={() => handleUserTypeSelection("user")}
+          >
+            <SelfImprovementIcon sx={{ mr: 1 }} />
+            Normal User
+          </Fab>
 
-      <Box sx={{ display: "flex", justifyContent: "center", gap: 4, marginTop: 2 }}>
-        <Fab
-          variant="extended"
-          sx={{ 
-            backgroundColor: (theme) => theme.palette.secondary.main, 
-            color: (theme) => theme.palette.primary.main,             
-            "&:hover": { backgroundColor: (theme) => theme.palette.secondary.dark } 
-          }}
-          onClick={() => handleUserTypeSelection("user")}
-        >
-          <SelfImprovementIcon sx={{ mr: 1 }} />
-          Normal User
-        </Fab>
+          <Fab
+            variant="extended"
+            sx={{ 
+              backgroundColor: "#9932cc",  
+              color: "#ffffff",            
+              "&:hover": { backgroundColor: "#b44ee6" } 
+            }}
+            onClick={() => handleUserTypeSelection("tattooArtist")}
+          >
+            <SportsMartialArtsIcon sx={{ mr: 1 }} />
+            Tattoo Artist
+          </Fab>
+        </Box>
+      </Fade>
 
-        <Fab
-          variant="extended"
-          sx={{ 
-            backgroundColor: (theme) => theme.palette.secondary.main,  
-            color: (theme) => theme.palette.primary.main,              
-            "&:hover": { backgroundColor: (theme) => theme.palette.secondary.dark } 
-          }}
-          onClick={() => handleUserTypeSelection("tattooArtist")}
-        >
-          <SportsMartialArtsIcon sx={{ mr: 1 }} />
-          Tattoo Artist
-        </Fab>
-      </Box>
+      
 
       {userType && (
         <Fade in={!!userType} timeout={1000}>
@@ -98,8 +100,7 @@ const FadeText = () => {
 
 export default function SignUp() {
   return (
-    <div>
-      <FadeText />
-    </div>
+    <BaseHomePage content={<FadeText />} />
   );
 }
+

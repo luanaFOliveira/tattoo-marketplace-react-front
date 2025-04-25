@@ -41,11 +41,20 @@ export default function LoginForm() {
   };
 
   return (
-    <div>
-      <Paper sx={{ width: "100%", padding: 4, boxShadow: 3, borderRadius: 2, backgroundColor: (theme) => theme.palette.secondary.main }}>
+    <Box 
+      sx={{ 
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: 3,
+        width: "100%",
+        minWidth: "100vh"
+      }}
+    >
+      <Paper sx={{ padding: 4, boxShadow: 3, borderRadius: 2, backgroundColor: (theme) => theme.palette.secondary.main }}>
         <Box sx={{ textAlign: "center", mb: 4 }}>
           <Typography variant="h5" color="primary">
-            BEM VINDO
+            LOGIN
           </Typography>
         </Box>
         <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
@@ -60,15 +69,9 @@ export default function LoginForm() {
             sx={{
               input: { color: 'white' }, 
               '& .MuiOutlinedInput-root': {
-                '& fieldset': {
-                  borderColor: 'white', 
-                },
-                '&:hover fieldset': {
-                  borderColor: 'white', 
-                },
-                '&.Mui-focused fieldset': {
-                  borderColor: 'white', 
-                },
+                '& fieldset': { borderColor: 'white' },
+                '&:hover fieldset': { borderColor: 'white' },
+                '&.Mui-focused fieldset': { borderColor: 'white' },
               },
             }}
           />
@@ -83,15 +86,9 @@ export default function LoginForm() {
             sx={{
               input: { color: 'white' }, 
               '& .MuiOutlinedInput-root': {
-                '& fieldset': {
-                  borderColor: 'white', 
-                },
-                '&:hover fieldset': {
-                  borderColor: 'white', 
-                },
-                '&.Mui-focused fieldset': {
-                  borderColor: 'white', 
-                },
+                '& fieldset': { borderColor: 'white' },
+                '&:hover fieldset': { borderColor: 'white' },
+                '&.Mui-focused fieldset': { borderColor: 'white' },
               },
             }}
           />
@@ -106,7 +103,6 @@ export default function LoginForm() {
           </Button>
         </Box>
       </Paper>
-
-    </div>
+    </Box>
   );
 }

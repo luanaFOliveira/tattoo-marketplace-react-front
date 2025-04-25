@@ -19,6 +19,57 @@ interface Props {
   existingUser?: UserDetail | TattooArtist;
 }
 
+const textFieldStyles = {
+  input: {
+    color: '#eaeaea',
+    backgroundColor: '#1e1e1e',
+  },
+  label: {
+    color: '#aaaaaa',
+  },
+  '& .MuiOutlinedInput-root': {
+    '& fieldset': {
+      borderColor: '#444444',
+    },
+    '&:hover fieldset': {
+      borderColor: '#666666',
+    },
+    '&.Mui-focused fieldset': {
+      borderColor: '#9932cc',
+    },
+  },
+  '& .MuiInputLabel-root.Mui-focused': {
+    color: '#9932cc',
+  },
+};
+
+const multiSelectStyles = {
+  '& .MuiOutlinedInput-root': {
+    backgroundColor: '#1e1e1e',
+    color: '#eaeaea',
+    '& fieldset': {
+      borderColor: '#444444',
+    },
+    '&:hover fieldset': {
+      borderColor: '#666666',
+    },
+    '&.Mui-focused fieldset': {
+      borderColor: '#9932cc',
+    },
+  },
+  '& .MuiInputLabel-root': {
+    color: '#aaaaaa',
+  },
+  '& .MuiInputLabel-root.Mui-focused': {
+    color: '#9932cc',
+  },
+  '& .MuiSvgIcon-root': {
+    color: '#eaeaea', // ícone da seta (dropdown)
+  },
+};
+
+
+
 export default function UserRegisterForm({ userType, registerUseCase, existingUser }: Props) {
   const [userData, setUserData] = useState<UserRequest | TattooArtistRequest>({
     name: "",
@@ -152,7 +203,7 @@ export default function UserRegisterForm({ userType, registerUseCase, existingUs
         sx={{
           display: "flex",
           flexDirection: "row",
-          backgroundColor: (theme) => theme.palette.secondary.main,
+          backgroundColor: "#2e2e2e",
           padding: 3,
           borderRadius: 2,
           height: "100%", 
@@ -191,18 +242,18 @@ export default function UserRegisterForm({ userType, registerUseCase, existingUs
           }}
         >
           <Box sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
-            <TextField label="Nome" variant="outlined" name="name" value={userData.name} onChange={handleChange} fullWidth />
-            <TextField label="Email" variant="outlined" name="email" value={userData.email} onChange={handleChange} fullWidth />
+            <TextField label="Nome" variant="outlined" name="name" value={userData.name} onChange={handleChange} fullWidth sx={textFieldStyles} />
+            <TextField label="Email" variant="outlined" name="email" value={userData.email} onChange={handleChange} fullWidth sx={textFieldStyles}/>
           </Box>
   
           <Box sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
-            <TextField label="Localização" variant="outlined" name="location" value={userData.location} onChange={handleChange} fullWidth />
-            <TextField label="Idade" variant="outlined" name="age" type="number" value={userData.age} onChange={handleChange} fullWidth />
+            <TextField label="Localização" variant="outlined" name="location" value={userData.location} onChange={handleChange} fullWidth sx={textFieldStyles}/>
+            <TextField label="Idade" variant="outlined" name="age" type="number" value={userData.age} onChange={handleChange} fullWidth sx={textFieldStyles}/>
           </Box>
   
           <Box sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
-            <TextField label="Senha" variant="outlined" name="password" type="password" value={userData.password} onChange={handleChange} fullWidth />
-            <TextField label="Confirme a senha" variant="outlined" name="passwordConfirm" type="password" value={userData.passwordConfirm} onChange={handleChange} fullWidth />
+            <TextField label="Senha" variant="outlined" name="password" type="password" value={userData.password} onChange={handleChange} fullWidth sx={textFieldStyles}/>
+            <TextField label="Confirme a senha" variant="outlined" name="passwordConfirm" type="password" value={userData.passwordConfirm} onChange={handleChange} fullWidth sx={textFieldStyles}/>
           </Box>
   
           {userType === "tattooArtist" && (
@@ -212,7 +263,8 @@ export default function UserRegisterForm({ userType, registerUseCase, existingUs
                 selectedItems={(userData as TattooArtistRequest).categoryIds ?? []}
                 onChange={handleCategoryChange}
                 label="Categorias"
-              />
+                //sx={multiSelectStyles}
+                />
             </Box>
           )}
   
