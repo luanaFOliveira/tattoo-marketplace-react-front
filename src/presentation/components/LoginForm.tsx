@@ -32,9 +32,9 @@ export default function LoginForm() {
       console.log("Usuário logado:", response.id);
       toast.success("Login realizado com sucesso.");
       router.push("/");
-    } catch (error) {
+    } catch (error: any) {
       console.error("Erro no login:", error);
-      toast.error("Erro ao realizar login.");
+      toast.error(error.message);
     } finally {
       setLoading(false);
     }

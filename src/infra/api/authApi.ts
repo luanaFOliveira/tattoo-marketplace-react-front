@@ -17,6 +17,11 @@ export class AuthApi implements AuthRepository {
       headers: { "Content-Type": "application/json" },
     });
 
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || "Erro ao realizar login.");
+    }
+
     const data = await response.json();
 
     const user: User = { 
@@ -40,15 +45,22 @@ export class AuthApi implements AuthRepository {
     if (profileImage) {
       formData.append("profile_img", profileImage);
     }
-    console.log("request:", formData.get("request"));
-    console.log("profile_img:", formData.get("profile_img"));
+  
     const response = await fetch("http://localhost:8089/user/register", {
       method: "POST",
-      body: formData, 
+      body: formData,
     });
   
     if (!response.ok) {
-      throw new Error('Erro ao registrar usuário');
+      const contentType = response.headers.get("Content-Type");
+  
+      if (response.status === 400 && contentType?.includes("application/json")) {
+        const errorData = await response.json();
+  
+        throw { type: "validation", errors: errorData };
+      }
+  
+      throw new Error("Erro ao registrar usuário");
     }
   
     const data = await response.json();

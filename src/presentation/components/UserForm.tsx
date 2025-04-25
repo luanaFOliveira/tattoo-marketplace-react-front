@@ -43,30 +43,6 @@ const textFieldStyles = {
   },
 };
 
-const multiSelectStyles = {
-  '& .MuiOutlinedInput-root': {
-    backgroundColor: '#1e1e1e',
-    color: '#eaeaea',
-    '& fieldset': {
-      borderColor: '#444444',
-    },
-    '&:hover fieldset': {
-      borderColor: '#666666',
-    },
-    '&.Mui-focused fieldset': {
-      borderColor: '#9932cc',
-    },
-  },
-  '& .MuiInputLabel-root': {
-    color: '#aaaaaa',
-  },
-  '& .MuiInputLabel-root.Mui-focused': {
-    color: '#9932cc',
-  },
-  '& .MuiSvgIcon-root': {
-    color: '#eaeaea', // ícone da seta (dropdown)
-  },
-};
 
 
 
@@ -87,7 +63,8 @@ export default function UserRegisterForm({ userType, registerUseCase, existingUs
   const [categories, setCategories] = useState<Category[]>([]);
   const router = useRouter();
   const getAllCategoriesUseCase = new GetAllCategoriesUseCase(new CategoryApi());
-  
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+
 
   useEffect(() => {
     if (userType === "tattooArtist") {
@@ -178,7 +155,7 @@ export default function UserRegisterForm({ userType, registerUseCase, existingUs
       let id;
   
       if (existingUser) {
-        const result = await registerUseCase.execute(existingUser.id,userData, profileImage);
+        const result = await registerUseCase.execute(existingUser.id, userData, profileImage);
         toast.success("Usuário atualizado com sucesso.");
         router.push(`/user/${result.id}`);
       } else {
@@ -188,9 +165,17 @@ export default function UserRegisterForm({ userType, registerUseCase, existingUs
         router.push("/login");
       }
   
-    } catch (error) {
+    } catch (error: any) {
       console.error("Erro:", error);
-      toast.error(existingUser ? "Erro ao atualizar usuário." : "Erro ao cadastrar usuário.");
+     
+      if (error.type === "validation") {
+        setFieldErrors(error.errors);
+        return;
+      }
+      else {
+        toast.error(existingUser ? "Erro ao atualizar usuário." : "Erro ao cadastrar usuário.");
+      }
+  
     } finally {
       setLoading(false);
     }
@@ -242,18 +227,18 @@ export default function UserRegisterForm({ userType, registerUseCase, existingUs
           }}
         >
           <Box sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
-            <TextField label="Nome" variant="outlined" name="name" value={userData.name} onChange={handleChange} fullWidth sx={textFieldStyles} />
-            <TextField label="Email" variant="outlined" name="email" value={userData.email} onChange={handleChange} fullWidth sx={textFieldStyles}/>
+            <TextField label="Nome" variant="outlined" name="name" value={userData.name} onChange={handleChange} fullWidth sx={textFieldStyles} error={Boolean(fieldErrors.name)} helperText={fieldErrors.name}/>
+            <TextField label="Email" variant="outlined" name="email" value={userData.email} onChange={handleChange} fullWidth sx={textFieldStyles} error={Boolean(fieldErrors.email)} helperText={fieldErrors.email}/>
           </Box>
   
           <Box sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
-            <TextField label="Localização" variant="outlined" name="location" value={userData.location} onChange={handleChange} fullWidth sx={textFieldStyles}/>
-            <TextField label="Idade" variant="outlined" name="age" type="number" value={userData.age} onChange={handleChange} fullWidth sx={textFieldStyles}/>
+            <TextField label="Localização" variant="outlined" name="location" value={userData.location} onChange={handleChange} fullWidth sx={textFieldStyles} error={Boolean(fieldErrors.location)} helperText={fieldErrors.location}/>
+            <TextField label="Idade" variant="outlined" name="age" type="number" value={userData.age} onChange={handleChange} fullWidth sx={textFieldStyles} error={Boolean(fieldErrors.age)} helperText={fieldErrors.age}/>
           </Box>
   
           <Box sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
-            <TextField label="Senha" variant="outlined" name="password" type="password" value={userData.password} onChange={handleChange} fullWidth sx={textFieldStyles}/>
-            <TextField label="Confirme a senha" variant="outlined" name="passwordConfirm" type="password" value={userData.passwordConfirm} onChange={handleChange} fullWidth sx={textFieldStyles}/>
+            <TextField label="Senha" variant="outlined" name="password" type="password" value={userData.password} onChange={handleChange} fullWidth sx={textFieldStyles} error={Boolean(fieldErrors.password)} helperText={fieldErrors.password}/>
+            <TextField label="Confirme a senha" variant="outlined" name="passwordConfirm" type="password" value={userData.passwordConfirm} onChange={handleChange} fullWidth sx={textFieldStyles} />
           </Box>
   
           {userType === "tattooArtist" && (
@@ -263,7 +248,6 @@ export default function UserRegisterForm({ userType, registerUseCase, existingUs
                 selectedItems={(userData as TattooArtistRequest).categoryIds ?? []}
                 onChange={handleCategoryChange}
                 label="Categorias"
-                //sx={multiSelectStyles}
                 />
             </Box>
           )}
