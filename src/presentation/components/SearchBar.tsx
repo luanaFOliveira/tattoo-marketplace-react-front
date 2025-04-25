@@ -24,7 +24,7 @@ export default function SearchBar() {
     >
       <InputBase
         sx={{ ml: 1, flex: 1 }}
-        placeholder="Busque por um tatuador ou categoria"
+        placeholder="Search by artist name or category"
         inputProps={{ 'aria-label': 'search tattoo artist or category' }}
       />
       <IconButton type="button" sx={{ p: '10px', color:"white" }} aria-label="search">

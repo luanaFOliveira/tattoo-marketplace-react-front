@@ -34,10 +34,10 @@ function Navbar() {
   };
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: (theme) => theme.palette.secondary.main }}>
+    <AppBar position="static" sx={{ backgroundColor: "#2e2e2e" }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <StreamIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          <StreamIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 , color:"white"}} />
           <Typography
             variant="h6"
             noWrap
@@ -49,7 +49,7 @@ function Navbar() {
               fontFamily: 'monospace',
               fontWeight: 700,
               letterSpacing: '.3rem',
-              color: (theme) => theme.palette.primary.main,
+              color: "#9932cc",
               textDecoration: 'none',
             }}
           >
@@ -95,10 +95,34 @@ function Navbar() {
             </Box>
           ) : (
             <Box sx={{ display: 'flex', gap: 2 }}>
-              <Button component={Link} href="/login" variant="outlined" color="inherit">
+              <Button
+                component={Link}
+                href="/login"
+                variant="contained"
+                sx={{
+                  color: '#ffffff',
+                  backgroundColor: '#9932cc',
+                  '&:hover': {
+                    backgroundColor: '#b44ee6',
+                  }
+                }}
+              >
                 Login
               </Button>
-              <Button component={Link} href="/signup" variant="contained" color="primary">
+
+              <Button
+                component={Link}
+                href="/signup"
+                variant="contained"
+                sx={{
+                  backgroundColor: '#4b0082',
+                  color: '#ffffff',
+                  '&:hover': {
+                    backgroundColor: '#5d1d9f',
+                    color: '#ffffff'
+                  }
+                }}
+              >
                 Sign Up
               </Button>
             </Box>

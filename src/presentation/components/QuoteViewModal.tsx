@@ -33,6 +33,7 @@ const style = {
   borderRadius: 3,
   boxShadow: 24,
   p: 4,
+  pt:8
 };
 
 export default function QuoteViewModal({
@@ -127,25 +128,40 @@ export default function QuoteViewModal({
           </Box>
         ) : (
           <Stack spacing={2}>
-            <Typography variant="h6" fontWeight="bold">
-              Detalhes do Orçamento
-            </Typography>
-            <Divider />
+            <Box
+              sx={{
+                backgroundColor: (theme) => theme.palette.primary.main,
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                borderTopLeftRadius: 12,
+                borderTopRightRadius: 12,
+                padding: 2,
+                textAlign: 'center',
+              }}
+            >
+              <Typography variant="h6" color="white" fontWeight="bold">
+                Quote Information
+              </Typography>
+            </Box>
 
-            <Typography><strong>Descrição:</strong> {quote?.description}</Typography>
-            <Typography><strong>Local:</strong> {quote?.placement}</Typography>
-            <Typography><strong>Tamanho:</strong> {quote?.size}</Typography>
-            <Typography><strong>Cores:</strong> {quote?.color}</Typography>
+  
+            {/* CONTEÚDO DO MODAL */}
+            <Typography><strong>Description:</strong> {quote?.description}</Typography>
+            <Typography><strong>Location:</strong> {quote?.placement}</Typography>
+            <Typography><strong>Size:</strong> {quote?.size}</Typography>
+            <Typography><strong>Color:</strong> {quote?.color}</Typography>
             {user?.isTattooArtist ? (
-              <Typography><strong>Cliente:</strong> {quote?.user?.name}</Typography>
+              <Typography><strong>Client:</strong> {quote?.user?.name}</Typography>
             ) : (
-              <Typography><strong>Tatuador(a):</strong> {quote?.tattooArtist?.name}</Typography>
+              <Typography><strong>Tattoo Artist:</strong> {quote?.tattooArtist?.name}</Typography>
             )}
-
+  
             {isEditing ? (
               <>
                 <Box>
-                  <Typography><strong>Preço:</strong></Typography>
+                  <Typography><strong>Price:</strong></Typography>
                   <TextField
                     fullWidth
                     type="number"
@@ -159,7 +175,7 @@ export default function QuoteViewModal({
                     size="small"
                   />
                 </Box>
-
+  
                 <Box>
                   <Typography><strong>Status:</strong></Typography>
                   <Select
@@ -183,29 +199,28 @@ export default function QuoteViewModal({
               </>
             ) : (
               <>
-                <Typography><strong>Preço:</strong> R$ {quote?.price}</Typography>
+                <Typography><strong>Price:</strong> R$ {quote?.price}</Typography>
                 <Typography>
                   <strong>Status:</strong>{" "}
                   <span style={{
-                    color: quote?.status?.name === "Aprovado" ? "green" :
-                          quote?.status?.name === "Rejeitado" ? "red" : "gray"
+                    color: quote?.status?.name === "Approved" ? "green" :
+                          quote?.status?.name === "Rejected" ? "red" : "gray"
                   }}>
                     {quote?.status?.name}
                   </span>
                 </Typography>
               </>
             )}
-
-
+  
             <Box display="flex" justifyContent="space-between" pt={2}>
-              <Button onClick={handleClose} variant="outlined" color="secondary">
-                Fechar
+              <Button onClick={handleClose} variant="contained" color="primary">
+                Close
               </Button>
-
+  
               {user?.isTattooArtist && (
                 isEditing ? (
-                  <Button variant="contained" color="success" onClick={handleSave}>
-                    Salvar
+                  <Button variant="contained" color="primary" onClick={handleSave}>
+                    Save
                   </Button>
                 ) : (
                   <Button variant="contained" color="primary" onClick={() => setIsEditing(true)}>
@@ -219,4 +234,5 @@ export default function QuoteViewModal({
       </Box>
     </Modal>
   );
+  
 }

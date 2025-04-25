@@ -55,61 +55,107 @@ export default function TattooArtistView({ tattooArtistId }: { tattooArtistId: s
     }
   };
 
-  const handleAddImage = () => {
-  };
-
   return (
-    <Box sx={{ maxWidth: "1000px", mx: "auto", mt: 5 }}>
-      <Card sx={{ display: "flex", border: (theme) => `2px solid ${theme.palette.primary.main}`, borderRadius: 3, boxShadow: 3, backgroundColor: (theme) => theme.palette.secondary.main }}>
-        <CardMedia
-          component="img"
-          image={`http://localhost:8089${artist.profilePicture}`}
-          alt={artist.name}
-          sx={{ width: 300, height: "100%", objectFit: "cover", borderRadius: "5px 0 0 5px" }}
-        />
-        <CardContent sx={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", p: 3 }}>
-          <Typography variant="h4" color="white" fontWeight="bold">
-            {artist.name}
-          </Typography>
-          <Typography variant="body1" color="white" sx={{ mt: 1 }}>
-            📍 {artist.location}
-          </Typography>
-          <Typography variant="body1" color="white">
-            ⭐ {artist.rate} / 5
-          </Typography>
-          <Box mt={2}>
-            {artist.categories?.map((category, index) => (
-              <Typography key={index} variant="body2" color="secondary" sx={{ display: "inline", mr: 1 }}>
-                #{category.name}
+    <Box sx={{ width: "100%", px: 2, mt: 5 }}>
+      <Box 
+        sx={{ 
+          display: "flex", 
+          flexDirection: { xs: "column", md: "row" }, 
+          height: "100%", 
+          gap: 0,
+          justifyContent: "flex-start",
+        }}
+      >
+          <Box sx={{ width: { xs: "100%", md: "400px" } }}>
+          <Card sx={{ 
+            height: "100%", 
+            borderRadius: 2, 
+            boxShadow: 3, 
+            border: (theme) => `2px solid ${theme.palette.primary.main}`,
+            backgroundColor: (theme) => theme.palette.secondary.main 
+          }}>
+            <CardMedia
+              component="img"
+              image={`http://localhost:8089${artist.profilePicture}`}
+              alt={artist.name}
+              sx={{ width: "100%", height: 300, objectFit: "cover" }}
+            />
+            <CardContent sx={{ p: 3 }}>
+              <Typography variant="h4" color="white" fontWeight="bold">
+                {artist.name}
               </Typography>
-            ))}
+              <Typography variant="body1" color="white" sx={{ mt: 1 }}>
+                📍 {artist.location}
+              </Typography>
+              <Typography variant="body1" color="white">
+                ⭐ {artist.rate} / 5
+              </Typography>
+              <Box mt={2}>
+                {artist.categories?.map((category, index) => (
+                  <Typography key={index} variant="body2" color="secondary" sx={{ display: "inline", mr: 1 }}>
+                    #{category.name}
+                  </Typography>
+                ))}
+              </Box>
+            </CardContent>
+          </Card>
+        </Box>
+  
+        <Box sx={{ flex: 1, px: { xs: 2, md: 4 } }}>
+          
+        <Box 
+            sx={{ 
+              display: "flex", 
+              alignItems: "center", 
+              justifyContent: "space-between", 
+              mt: 1 
+            }}
+          >
+            <Typography 
+              color="primary" 
+              variant="h4" 
+              sx={{ fontWeight: "bold", textAlign: "center", flex: 1 }}
+            >
+              Portifolio
+            </Typography>
+
+            <Fab 
+              size="medium"
+              variant="extended"
+              color="primary"
+              onClick={handleQuoteRequest}
+              aria-label="request-quote"
+            >
+              <AddIcon sx={{ mr: 1 }} /> Request Quote
+            </Fab>
           </Box>
-        </CardContent>
-        <CardActions>
-        <Fab 
-          variant="extended" 
-          color="primary" 
-          onClick={handleQuoteRequest} 
-          aria-label="request-quote"
-        >
-          <AddIcon sx={{ mr: 1 }} />  
-          Request Quote
-        </Fab>
-        </CardActions>
-        
-      </Card>
-      
+
+          {/* <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 1 }}>
+            <Fab 
+              size="medium"
+              variant="extended"
+              color="primary"
+              onClick={handleQuoteRequest}
+              aria-label="request-quote"
+            >
+              <AddIcon sx={{ mr: 1 }} /> Request Quote
+            </Fab>
+          </Box> */}
+
+          <Box sx={{ mt: 3 }}>
+            <ImageGallery images={artist.images} userId={artist.id} showAddButton={false} />
+          </Box>
+        </Box>
+      </Box>
+  
       <QuoteRequestModal 
         tattooArtist={artist} 
         open={openModal} 
         onClose={() => setOpenModal(false)} 
       />
-
-      <Typography color="white" variant="h5" sx={{mt: 4, mb: 1, textAlign: "center", fontWeight: "bold" }}>
-        Portfólio
-      </Typography>
-      <ImageGallery images={artist.images} userId={artist.id} showAddButton={false}/>
     </Box>
   );
+  
+  
 }
 
