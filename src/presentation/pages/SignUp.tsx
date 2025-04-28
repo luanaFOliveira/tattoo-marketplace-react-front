@@ -14,7 +14,7 @@ import { RegisterTattooArtistUseCase } from "@/application/tattoo-artist/registe
 import { TattooArtistApi } from "@/infra/api/tattooArtistApi";
 import { useAuth } from "@/presentation/context/AuthContext"; 
 
-import BaseHomePage from "@/presentation/pages/BaseHomePage";
+import AuthLayout from "@/presentation/pages/AuthLayout";
 
 const FadeText = () => {
   const [visible, setVisible] = useState(false);
@@ -100,7 +100,8 @@ const FadeText = () => {
 
 export default function SignUp() {
   return (
-    <BaseHomePage content={<FadeText />} />
+    <FadeText />
+    // <AuthLayout content={<FadeText />} />
   );
 }
 

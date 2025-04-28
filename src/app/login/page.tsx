@@ -1,10 +1,10 @@
 import { Container, Box, Typography, Paper } from "@mui/material";
 import LoginForm from "../../presentation/components/LoginForm";
-import BaseHomePage from "@/presentation/pages/BaseHomePage";
+import AuthLayout from "@/presentation/pages/AuthLayout";
 export default function LoginPage() {
   return (
     <main>
-        <BaseHomePage content={<LoginForm />} />
+        <AuthLayout content={<LoginForm />} />
     </main>
   );
 }
