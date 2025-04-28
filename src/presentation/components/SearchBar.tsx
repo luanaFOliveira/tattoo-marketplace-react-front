@@ -6,16 +6,16 @@ import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 
 
-// talvez fazer um searchbar podendo mandar se eh pra localizacao ou por nome ou por categoria
 export default function SearchBar() {
   return (
     <Paper
       component="form"
       sx={{
-        p: '2px 4px',
+        p: '2px 8px',
         display: 'flex',
         alignItems: 'center',
-        width: { xs: '90%', sm: '70%', md: '40%', lg: '30rem' },
+        width: { xs: '60%', sm: '40%', md: '30%', lg: '25rem' },
+        height: '45px',
         borderRadius: '16px', 
         border: (theme) => `2px solid ${theme.palette.primary.main}`,
         backgroundColor: (theme) => theme.palette.secondary.main,
@@ -24,8 +24,8 @@ export default function SearchBar() {
     >
       <InputBase
         sx={{ ml: 1, flex: 1 }}
-        placeholder="Search by artist name or category"
-        inputProps={{ 'aria-label': 'search tattoo artist or category' }}
+        placeholder="Search by artist name "
+        inputProps={{ 'aria-label': 'search tattoo artist ' }}
       />
       <IconButton type="button" sx={{ p: '10px', color:"white" }} aria-label="search">
         <SearchIcon />

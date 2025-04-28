@@ -17,13 +17,19 @@ type Props = {
 export default function TattooArtistCard({ artist }: Props) {
   return (
     <Link href={`/tattoo-artist/${artist.id}`} passHref style={{ textDecoration: "none" }}>
-      <Card sx={{ maxWidth: 250, position: "relative", p: 1, backgroundColor: (theme) => theme.palette.secondary.main, cursor: "pointer" }}>
+      <Card sx={{ maxWidth: 1000, position: "relative", p: 1, backgroundColor: (theme) => theme.palette.secondary.main, cursor: "pointer" }}>
         <CardMedia
           component="img"
           image={`http://localhost:8089${artist.profilePicture}`}
           alt={artist.name}
-          sx={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "5px 0 0 5px" }}
+          sx={{
+            width: "100%",
+            height: 200, 
+            objectFit: "cover",
+            borderRadius: "5px 5px 0 0" 
+          }}
         />
+
         <CardContent>
           <Box display="flex" justifyContent="space-between" alignItems="center">
             <Typography variant="h6" component="div" color="white">
@@ -42,7 +48,13 @@ export default function TattooArtistCard({ artist }: Props) {
               {artist.location}
             </Typography>
           </Box>
-          {artist.categories.length > 0 && <Chip label={artist.categories[0]?.name} sx={{ mt: 1, backgroundColor: "white" }} />}
+          {artist.categories.length > 0 && (
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 1 }}>
+              {artist.categories.map((category) => (
+                <Chip key={category.id} label={category.name} sx={{ backgroundColor: "white" }} />
+              ))}
+            </Box>
+          )}        
         </CardContent>
       </Card>
     </Link>

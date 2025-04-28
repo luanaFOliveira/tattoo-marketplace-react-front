@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState } from "react";
-import { CircularProgress, Typography, Card, CardContent, CardMedia, Box, Grid, Button } from "@mui/material";
+import { CircularProgress, Typography, Card, CardContent, CardMedia, Box, Chip, Button } from "@mui/material";
 import { TattooArtist } from "@/domain/entities/tattoo-artist";
 import { TattooArtistApi } from "@/infra/api/tattooArtistApi";
 import QuoteRequestModal from "@/presentation/components/QuoteRequestModal";
@@ -91,11 +91,13 @@ export default function TattooArtistView({ tattooArtistId }: { tattooArtistId: s
                 ⭐ {artist.rate} / 5
               </Typography>
               <Box mt={2}>
-                {artist.categories?.map((category, index) => (
-                  <Typography key={index} variant="body2" color="secondary" sx={{ display: "inline", mr: 1 }}>
-                    #{category.name}
-                  </Typography>
-                ))}
+              {artist.categories.length > 0 && (
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 1 }}>
+                  {artist.categories.map((category) => (
+                    <Chip key={category.id} label={category.name} sx={{ backgroundColor: "white" }} />
+                  ))}
+                </Box>
+              )}     
               </Box>
             </CardContent>
           </Card>
