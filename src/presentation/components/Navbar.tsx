@@ -96,7 +96,7 @@ function Navbar() {
             </Box>
           ) : (
             <Box sx={{ display: 'flex', gap: 2 }}>
-              <SearchBar/>
+              {/* <SearchBar/> */}
               <Button
                 component={Link}
                 href="/login"

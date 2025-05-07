@@ -1,13 +1,30 @@
 import * as React from 'react';
-import { Box, FormControl, InputLabel, Select, MenuItem, TextField, Typography, SelectChangeEvent } from '@mui/material';
+import { Box, FormControl, InputLabel, Select, MenuItem, TextField, Typography, SelectChangeEvent, Button } from '@mui/material';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import { StyledSelect } from '@/app/StyledRoot';
+import { Category } from '@/domain/entities/category';
 
+interface Props {
+    category: string;
+    location: string;
+    setCategory: (value: string) => void;
+    setLocation: (value: string) => void;
+    handleFilters: () => void;
+    categories: Category[];
+    locations: string[];
+}
 
-export default function ExpandedFilter() {
-  const [category, setCategory] = React.useState('');
-  const [location, setLocation] = React.useState('');
-
+export default function ExpandedFilter({
+    category,
+    location,
+    setCategory,
+    setLocation,
+    handleFilters,
+    categories,
+    locations,
+  }: Props) 
+ {
+  
   return (
     <Box
       sx={{
@@ -24,9 +41,33 @@ export default function ExpandedFilter() {
         boxShadow: 3, 
       }}
     >
-        <Typography variant="h6" color="primary" align="center">
-            <FilterAltIcon /> Filters 
-        </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Typography variant="h6" color="primary" sx={{ display: 'flex', alignItems: 'center' }}>
+                <FilterAltIcon sx={{ mr: 0.5 }} /> Filters
+            </Typography>
+            <Button
+                onClick={handleFilters}
+                variant="contained"
+                size="small"
+                sx={{
+                color: '#ffffff',
+                backgroundColor: (theme) => theme.palette.primary.main,
+                borderRadius: '20px',
+                paddingX: 3,
+                paddingY: 0.5,
+                marginLeft: 5,
+                minWidth: 'auto',
+                textTransform: 'none',
+                fontSize: '0.75rem',
+                '&:hover': {
+                    backgroundColor: '#b44ee6',
+                },
+                }}
+            >
+                Apply
+            </Button>
+        </Box>
+
         <FormControl fullWidth>
             <InputLabel sx={{color:"white"}}>Category</InputLabel>
             <StyledSelect
@@ -34,9 +75,11 @@ export default function ExpandedFilter() {
                 onChange={(e: SelectChangeEvent<unknown>) => setCategory(e.target.value as string)}
                 label="Category"
             >
-            <MenuItem value="realism">Realism</MenuItem>
-            <MenuItem value="japanese">Japanese</MenuItem>
-            <MenuItem value="geometric">Geometric</MenuItem>
+            {categories.map((cat: Category) => (
+                <MenuItem key={cat.id} value={cat.name}>
+                    {cat.name}
+                </MenuItem>
+            ))}
             </StyledSelect>
         </FormControl>
 
@@ -47,9 +90,11 @@ export default function ExpandedFilter() {
                 onChange={(e: SelectChangeEvent<unknown>) => setLocation(e.target.value as string)}
                 label="Location"
             >
-            <MenuItem value="sao-paulo">São Paulo</MenuItem>
-            <MenuItem value="rio-de-janeiro">Rio de Janeiro</MenuItem>
-            <MenuItem value="curitiba">Curitiba</MenuItem>
+            {locations.map((loc: string) => (
+                <MenuItem key={loc} value={loc}>
+                    {loc}
+                </MenuItem>
+            ))}
             </StyledSelect>
         </FormControl>
     </Box>

@@ -26,7 +26,11 @@ export default function TattooArtistSlider() {
   useEffect(() => {
     const fetchArtists = async () => {
       try {
-        const data = await getAllTattooArtistUseCase.execute();
+        const filters = {
+          sortBy: 'rate', 
+          sortOrder: 'desc', 
+        };
+        const data = await getAllTattooArtistUseCase.execute(filters);
         setArtists(data);
       } catch (error) {
         console.error("Erro ao buscar tatuadores:", error);

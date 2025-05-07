@@ -6,46 +6,124 @@ import TattooArtistCard from "@/presentation/components/TattooArtistCard";
 import { TattooArtist } from "@/domain/entities/tattoo-artist";
 import { TattooArtistApi } from "@/infra/api/tattooArtistApi";
 import { GetAllTattooArtistUseCase } from "@/application/tattoo-artist/getAllTattooArtistUseCase";
+import { GetTattooArtistLocationsUseCase } from "@/application/tattoo-artist/getTattooArtistLocationsUseCase";
 import SearchBar from "@/presentation/components/SearchBar";
 import FilterBox from "../components/FilterBox";
 import ExpandedFilter from "../components/ExpandedFilter";
+import { useTheme, useMediaQuery } from '@mui/material';
+import { Category } from "@/domain/entities/category";
+import { CategoryApi } from "@/infra/api/categoryApi";
+import { GetAllCategoriesUseCase } from "@/application/category/getAllCategoriesUseCase";
+
 
 export default function TattooArtistList() {
   const [artists, setArtists] = useState<TattooArtist[]>([]);
   const [loading, setLoading] = useState(true);
-  const getAllTattooArtistUseCase = new GetAllTattooArtistUseCase(new TattooArtistApi());
+  const tattooArtistApi = new TattooArtistApi();
+  const getAllTattooArtistUseCase = new GetAllTattooArtistUseCase(tattooArtistApi);
+  const getTattooArtistLocationsUseCase = new GetTattooArtistLocationsUseCase(tattooArtistApi);
+
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('md')); 
+
+  const [category, setCategory] = useState('');
+  const [location, setLocation] = useState('');
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [locations, setLocations] = useState<string[]>([]);
+  const getAllCategoriesUseCase = new GetAllCategoriesUseCase(new CategoryApi());
+  
+
+  const fetchArtists = async () => {
+    try {
+      setLoading(true);
+      const filters = {
+        category, 
+        location, 
+      };
+      const data = await getAllTattooArtistUseCase.execute(filters);
+      setArtists(data);
+    } catch (error) {
+      console.error("Erro ao buscar tatuadores:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchArtists = async () => {
+    fetchArtists();
+  }, [category, location]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
       try {
-        const data = await getAllTattooArtistUseCase.execute();
-        setArtists(data);
+        const data = await getAllCategoriesUseCase.execute();
+        setCategories(data);
       } catch (error) {
-        console.error("Erro ao buscar tatuadores:", error);
-      } finally {
-        setLoading(false);
+        console.error("Erro ao buscar categorias:", error);
       }
     };
-
-    fetchArtists();
+    fetchCategories();
   }, []);
+
+  useEffect(() => {
+    const fetchLocations = async () => {
+      try {
+        const data = await getTattooArtistLocationsUseCase.execute();
+        setLocations(data);
+      } catch (error) {
+        console.error("Erro ao buscar localizacoes:", error);
+      }
+    };
+    fetchLocations();
+  }, []);
+
+  const handleFilters = () => {
+    fetchArtists(); 
+  };
 
   if (loading) {
     return <CircularProgress sx={{ display: "block", margin: "auto", mt: 5 }} />;
   }
 
   return (
-    <Box sx={{ display: 'flex', gap: 2, padding: 2, mt:10 }}>
-      <Box sx={{ width: '250px' }}>
-        <ExpandedFilter />
-      </Box>
-
+    <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 2, p: 2, mt: 10 }}>
+      
+      {!isSmallScreen && (
+        <Box sx={{ width: '250px' }}>
+          <ExpandedFilter
+            category={category}
+            location={location}
+            setCategory={setCategory}
+            setLocation={setLocation}
+            handleFilters={handleFilters}
+            categories={categories}
+            locations={locations}  
+          />
+        </Box>
+      )}
+  
       <Box sx={{ flexGrow: 1 }}>
         <Stack spacing={4}>
-          <SearchBar />
+          {isSmallScreen ? (
+            <Box sx={{ display: 'flex', gap: 2 }}>
+              <SearchBar />
+              <FilterBox 
+                category={category}
+                location={location}
+                setCategory={setCategory}
+                setLocation={setLocation}
+                handleFilters={handleFilters}
+                categories={categories}
+                locations={locations}  
+              />
+            </Box>
+          ) : (
+            <SearchBar />
+          )}
+
           <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
             {artists.map((artist) => (
-              <Grid key={artist.id} size={{ xs: 2, sm: 4, md: 3 }} component="div">
+              <Grid key={artist.id} size={{ xs: 12, sm: 6, md: 3 }} component="div">
                 <TattooArtistCard artist={artist} />
               </Grid>
             ))}
@@ -53,16 +131,6 @@ export default function TattooArtistList() {
         </Stack>
       </Box>
     </Box>
-    // <Stack spacing={4}>  
-    //   <SearchBar />
-    //   <ExpandedFilter />
-    //   <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-    //       {artists.map((artist) => (
-    //       <Grid key={artist.id} size={{ xs: 2, sm: 4, md: 3 }} component="div">
-    //           <TattooArtistCard artist={artist} />
-    //       </Grid>
-    //       ))}
-    //   </Grid>
-    // </Stack>
   );
+  
 }

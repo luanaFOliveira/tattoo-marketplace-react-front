@@ -3,13 +3,30 @@ import * as React from 'react';
 import { Button, Menu, MenuItem, Select, FormControl, InputLabel, Box, SelectChangeEvent } from '@mui/material';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { StyledSelect } from '@/app/StyledRoot';
+import { Category } from '@/domain/entities/category';
 
-export default function FilterBox() {
+interface Props {
+    category: string;
+    location: string;
+    setCategory: (value: string) => void;
+    setLocation: (value: string) => void;
+    handleFilters: () => void;
+    categories: Category[];
+    locations: string[];
+}
+
+export default function FilterBox({
+  category,
+  location,
+  setCategory,
+  setLocation,
+  handleFilters,
+  categories,
+  locations,
+}: Props)
+ {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-
-  const [category, setCategory] = React.useState('');
-  const [location, setLocation] = React.useState('');
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -51,9 +68,11 @@ export default function FilterBox() {
               label="Category"
               onChange={(e: SelectChangeEvent<unknown>) => setCategory(e.target.value as string)}
             >
-              <MenuItem value="realism">Realism</MenuItem>
-              <MenuItem value="japanese">Japanese</MenuItem>
-              <MenuItem value="geometric">Geometric</MenuItem>
+              {categories.map((cat: Category) => (
+                  <MenuItem key={cat.id} value={cat.id}>
+                      {cat.name}
+                  </MenuItem>
+              ))}
             </StyledSelect>
           </FormControl>
 
@@ -64,9 +83,11 @@ export default function FilterBox() {
               label="Location"
               onChange={(e: SelectChangeEvent<unknown>) => setLocation(e.target.value as string)}
             >
-              <MenuItem value="sao-paulo">São Paulo</MenuItem>
-              <MenuItem value="rio-de-janeiro">Rio de Janeiro</MenuItem>
-              <MenuItem value="curitiba">Curitiba</MenuItem>
+              {locations.map((loc: string) => (
+                  <MenuItem key={loc} value={loc}>
+                      {loc}
+                  </MenuItem>
+              ))}
             </StyledSelect>
           </FormControl>
         </Box>
