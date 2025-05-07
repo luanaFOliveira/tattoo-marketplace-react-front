@@ -40,18 +40,18 @@ export default function HomePage() {
 return (
     <>
       <Stack spacing={4} alignItems="center">
-        <Stack spacing={4} direction="row" alignItems="center">
+        {/* <Stack spacing={4} direction="row" alignItems="center">
           <SearchBar />
           <FilterBox />
-        </Stack>
+        </Stack> */}
   
-        <Button 
+        {/* <Button 
           variant="contained" 
           color="primary"
           sx={{ borderRadius: 6, width: '200px', height: '40px' }}
         >
           Search
-        </Button>
+        </Button> */}
   
         <Stack 
           direction="row" 

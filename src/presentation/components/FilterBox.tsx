@@ -1,7 +1,8 @@
 'use client';
 import * as React from 'react';
-import { Button, Menu, MenuItem, Select, FormControl, InputLabel, Box } from '@mui/material';
+import { Button, Menu, MenuItem, Select, FormControl, InputLabel, Box, SelectChangeEvent } from '@mui/material';
 import FilterListIcon from '@mui/icons-material/FilterList';
+import { StyledSelect } from '@/app/StyledRoot';
 
 export default function FilterBox() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -45,28 +46,28 @@ export default function FilterBox() {
         <Box display="flex" flexDirection="column" gap={2}>
           <FormControl fullWidth size="small">
             <InputLabel>Category</InputLabel>
-            <Select
+            <StyledSelect
               value={category}
               label="Category"
-              onChange={(e) => setCategory(e.target.value)}
+              onChange={(e: SelectChangeEvent<unknown>) => setCategory(e.target.value as string)}
             >
               <MenuItem value="realism">Realism</MenuItem>
               <MenuItem value="japanese">Japanese</MenuItem>
               <MenuItem value="geometric">Geometric</MenuItem>
-            </Select>
+            </StyledSelect>
           </FormControl>
 
           <FormControl fullWidth size="small">
             <InputLabel>Location</InputLabel>
-            <Select
+            <StyledSelect
               value={location}
               label="Location"
-              onChange={(e) => setLocation(e.target.value)}
+              onChange={(e: SelectChangeEvent<unknown>) => setLocation(e.target.value as string)}
             >
               <MenuItem value="sao-paulo">São Paulo</MenuItem>
               <MenuItem value="rio-de-janeiro">Rio de Janeiro</MenuItem>
               <MenuItem value="curitiba">Curitiba</MenuItem>
-            </Select>
+            </StyledSelect>
           </FormControl>
         </Box>
       </Menu>

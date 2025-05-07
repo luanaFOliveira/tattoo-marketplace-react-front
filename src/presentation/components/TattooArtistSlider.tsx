@@ -50,7 +50,7 @@ export default function TattooArtistSlider() {
     return <CircularProgress sx={{ display: "block", margin: "auto", mt: 5 }} />;
   }
 
-  const maxSteps = artists.length - artistsPerPage + 1;
+  const maxSteps = Math.max(1, artists.length - artistsPerPage + 1);
 
   const currentArtists = artists.slice(
     activeStep,
@@ -86,25 +86,27 @@ export default function TattooArtistSlider() {
         </Stack>
       </Box>
 
-      <MobileStepper
-        variant="dots"
-        steps={maxSteps}
-        position="static"
-        activeStep={activeStep}
-        nextButton={
-          <Button size="small" onClick={handleNext} disabled={activeStep === maxSteps - 1}>
-            Próximo
-            {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
-          </Button>
-        }
-        backButton={
-          <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
-            {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
-            Voltar
-          </Button>
-        }
-        sx={{ maxWidth: 400, flexGrow: 1 }}
-      />
+      {artists.length > artistsPerPage && (
+        <MobileStepper
+          variant="dots"
+          steps={maxSteps}
+          position="static"
+          activeStep={activeStep}
+          nextButton={
+            <Button size="small" onClick={handleNext} disabled={activeStep === maxSteps - 1}>
+              Próximo
+              {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
+            </Button>
+          }
+          backButton={
+            <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
+              {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
+              Voltar
+            </Button>
+          }
+          sx={{ maxWidth: 400, flexGrow: 1 }}
+        />
+      )}
     </Stack>
   );
 }

@@ -19,21 +19,22 @@ export default function Home() {
       <Box
         sx={{
             width: { xs: "100%", md: "50%" },
+            height: "100vh",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            justifyContent: "flex-start", 
+            justifyContent: "center", 
             textAlign: "center",
             p: 4,
             pt: 0, 
         }}
       >
-        <Typography variant="h4" color="primary" align="center">
+        <Typography variant="h4" color="primary" align="center" sx={{ mt: -10, mb: 10 }}>  
             Find The Perfect Tattoo Artist For Your Next Piece
         </Typography>
-        <Typography variant="h6" color="primary" align="center" sx={{ mt: 4, mb: 4 }}>
+        {/* <Typography variant="h6" color="primary" align="center" sx={{ mt: 4, mb: 4 }}>
             Search by name, category or location
-        </Typography>
+        </Typography> */}
         <HomePage />
         
       </Box>
@@ -41,7 +42,7 @@ export default function Home() {
         sx={{
           width: { xs: "70%", md: "50%" },
           height: "70%",
-          backgroundImage: 'url("/home-page.png")',
+          backgroundImage: 'url("/home-illustration.png")',
           backgroundRepeat: "no-repeat",
           backgroundSize: "contain",
           backgroundPosition: "top center", 

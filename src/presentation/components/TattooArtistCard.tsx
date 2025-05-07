@@ -36,10 +36,10 @@ export default function TattooArtistCard({ artist }: Props) {
               {artist.name}
             </Typography>
             <Box display="flex" alignItems="center">
-              <StarIcon sx={{ color: "gold", fontSize: 18 }} />
-              <Typography variant="body2" color="white" sx={{ ml: 0.5 }}>
+              <Typography variant="body2" color="white" sx={{ mr: 0.5 }}>
                 {artist.rate ?? "N/A"}
               </Typography>
+              <StarIcon sx={{ color: "gold", fontSize: 18 }} />
             </Box>
           </Box>
           <Box display="flex" alignItems="center">

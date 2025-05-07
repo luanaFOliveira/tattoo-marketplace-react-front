@@ -13,13 +13,14 @@ export default function AuthLayout({ content }: AuthLayoutProps) {
         flexDirection: { xs: "column", md: "row" },
         height: "100vh",
         overflow: "hidden",
+        marginTop: 8,
       }}
     >
       <Box
         sx={{
           width: { xs: "100%", md: "50%" },
-          height: "100%",
-          backgroundImage: 'url("/sign-up-page-illustration.png")',
+          height: "85%",
+          backgroundImage: 'url("/sign-up-illustration.png")',
           backgroundRepeat: "no-repeat",
           backgroundSize: "contain",
           backgroundPosition: "top center", 

@@ -1,5 +1,7 @@
 'use client';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { styled } from '@mui/system';
+import { Select } from '@mui/material';
 
 const theme = createTheme({
   palette: {
@@ -29,3 +31,15 @@ export function StyledRoot({
     </ThemeProvider>
   );
 }
+
+export const StyledSelect = styled(Select)(({ theme }) => ({
+  '& .MuiOutlinedInput-notchedOutline': {
+    borderColor: 'white',  
+  },
+  '&:hover .MuiOutlinedInput-notchedOutline': {
+    borderColor: 'white',  
+  },
+  '& .MuiSelect-icon': {
+      color: 'white', 
+  },
+}));

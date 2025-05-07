@@ -37,7 +37,7 @@ export default function MultiSelect<T extends Item>({
 
   return (
     <FormControl sx={{ m: 1, width: 300 }}>
-      <InputLabel id="multiple-chip-label">{label}</InputLabel>
+      <InputLabel id="multiple-chip-label" sx={{color:"#eaeaea"}}>{label}</InputLabel>
       <Select
         labelId="multiple-chip-label"
         id="multiple-chip"
@@ -53,6 +53,18 @@ export default function MultiSelect<T extends Item>({
             })}
           </Box>
         )}
+        sx={{
+          '& .MuiSelect-select': {
+            backgroundColor: '#1e1e1e',  // cor do fundo
+            color: '#eaeaea',  // cor do texto
+          },
+          '& .MuiOutlinedInput-notchedOutline': {
+            borderColor: '#444444',  // cor da borda
+          },
+          '&:hover .MuiOutlinedInput-notchedOutline': {
+            borderColor: '#666666',  // cor da borda ao passar o mouse
+          },
+        }}
       >
         {items.map(({ id, name }) => (
           <MenuItem
