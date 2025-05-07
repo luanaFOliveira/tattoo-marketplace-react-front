@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState } from "react";
-import { CircularProgress, Typography, Avatar, Chip, CardMedia, Box, Button } from "@mui/material";
+import { CircularProgress,Divider, Typography, Avatar, Chip, CardMedia, Box, Button } from "@mui/material";
 import { useAuth } from "@/presentation/context/AuthContext";
 import { useRouter } from 'next/navigation'
 import { toast } from "react-toastify";
@@ -17,7 +17,7 @@ import { TattooArtist } from "@/domain/entities/tattoo-artist";
 import { GetTattooArtistUseCase } from "@/application/tattoo-artist/getTattooArtistUseCase";
 import { GetUserUseCase } from "@/application/user/getUserUseCase";
 import TattooArtistTab from "@/presentation/components/TattooArtistTab";
-
+import GradeIcon from '@mui/icons-material/Grade';
 
 export default function UserView({ userId }: { userId: string }) {
   const [userData, setUserData] = useState< UserDetail | TattooArtist |null>(null);
@@ -70,72 +70,77 @@ export default function UserView({ userId }: { userId: string }) {
 
 
   return (<>
-    <Box
-      sx={{
-        width: "100%",
-        backgroundColor: (theme) => theme.palette.secondary.main,
-        border: (theme) => `2px solid ${theme.palette.primary.main}`,
-        borderRadius: 3,
-        boxShadow: 3,
-        marginTop: 5,
-        px: 6,
-        py: 4,
-        position: "relative" 
-      }}
-    >
-      <Fab
-        color="primary"
-        aria-label="edit"
-        variant="extended"
-        sx={{ position: "absolute", top: 16, right: 16 }}
-        onClick={handleOpenModal} 
+   <Box sx={{ width: "100%", px: 2, mt: 5 }}>
+      <Box 
+        sx={{ 
+          position: "relative", 
+          display: "flex", 
+          flexDirection: { xs: "column", md: "row" }, 
+          alignItems: "center",
+          gap: 3,
+        }}
       >
-        <EditIcon sx={{ mr: 1 }} /> Edit
-      </Fab>
-  
-      <Box sx={{ display: "flex", alignItems: "center", gap: 4 }}>
-        <Avatar
+        <Avatar 
+          src={`http://localhost:8089${userData.profilePicture}`} 
           alt={userData.name}
-          src={`http://localhost:8089${userData.profilePicture}`}
           sx={{ width: 150, height: 150 }}
         />
-  
+
         <Box>
-          <Typography variant="h5" color="white" fontWeight="bold" gutterBottom>
+          <Typography variant="h4" color="white" fontWeight="bold">
             {userData.name}
           </Typography>
-          <Typography variant="body1" color="white" fontWeight="bold">
+          <Typography variant="body1" color="white" sx={{ mt: 1 }}>
             <LocationOnIcon/> {userData.location}
           </Typography>
-          <Typography variant="body1" color="white" fontWeight="bold">
+          <Typography variant="body1" color="white">
             <EmailIcon/> {userData.email}
           </Typography>
+          <Typography variant="body1" color="white">
+            <GradeIcon/> {userData.rate?? "Not rated yet"}
+          </Typography>
+
           {user?.isTattooArtist && "categories" in userData && userData.categories && (
-          <Box mt={2} display="flex" flexWrap="wrap" gap={1}>
-            {userData.categories.map((category, index) => (
-              <Chip
-                key={index}
-                label={`${category.name}`}
-                color="primary"
-                variant="filled"
-              />
-            ))}
-          </Box>
-        )}
+            <Box mt={2} display="flex" flexWrap="wrap" gap={1}>
+              {userData.categories.map((category, index) => (
+                <Chip
+                  key={index}
+                  label={`${category.name}`}
+                  color="primary"
+                  variant="filled"
+                />
+              ))}
+            </Box>
+          )}
         </Box>
+
+        <Fab
+          color="primary"
+          aria-label="edit"
+          variant="extended"
+          sx={{ position: "absolute", top: 16, right: 16 }}
+          onClick={handleOpenModal} 
+        >
+          <EditIcon sx={{ mr: 1 }} /> Edit
+        </Fab>
       </Box>
+
+      <Divider sx={{ my: 4, color: "white", borderColor: "white", fontWeight: "bold" }}>
+      </Divider>
+
+      {user?.isTattooArtist && "images" in userData ? (
+        <TattooArtistTab images={userData.images} userId={userData.id} />
+      ) : (
+        <QuoteList />
+      )}
+      <EditUserModal
+        user={userData}
+        open={openModal}
+        handleClose={handleCloseModal}
+        userType={user?.isTattooArtist ? "tattooArtist" : "user"}
+      />
     </Box>
-    {user?.isTattooArtist && "images" in userData ? (
-      <TattooArtistTab images={userData.images} userId={userData.id} />
-    ) : (
-      <QuoteList />
-    )}
-    <EditUserModal
-      user={userData}
-      open={openModal}
-      handleClose={handleCloseModal}
-      userType={user?.isTattooArtist ? "tattooArtist" : "user"}
-    />
+    
     </>);
   
   

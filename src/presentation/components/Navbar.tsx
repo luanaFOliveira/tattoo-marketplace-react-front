@@ -17,6 +17,7 @@ import { useAuth } from "@/presentation/context/AuthContext";
 import { useRouter } from 'next/navigation'
 import HubIcon from '@mui/icons-material/Hub';
 import StreamIcon from '@mui/icons-material/Stream';
+import SearchBar from './SearchBar';
 
 const settings = ['Profile', 'Quotes', 'Logout'];
 
@@ -34,10 +35,10 @@ function Navbar() {
   };
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: "#2e2e2e" }}>
-      <Container maxWidth="xl">
+    <AppBar position="fixed" sx={{ backgroundColor: (theme) => theme.palette.secondary.main }}>
+      <Box sx={{ width: '100%' }}>
         <Toolbar disableGutters>
-          <StreamIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 , color:"white"}} />
+          <StreamIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1, ml:4 , color:"white"}} />
           <Typography
             variant="h6"
             noWrap
@@ -49,7 +50,7 @@ function Navbar() {
               fontFamily: 'monospace',
               fontWeight: 700,
               letterSpacing: '.3rem',
-              color: "#9932cc",
+              color: (theme) => theme.palette.primary.main,
               textDecoration: 'none',
             }}
           >
@@ -95,13 +96,14 @@ function Navbar() {
             </Box>
           ) : (
             <Box sx={{ display: 'flex', gap: 2 }}>
+              <SearchBar/>
               <Button
                 component={Link}
                 href="/login"
                 variant="contained"
                 sx={{
                   color: '#ffffff',
-                  backgroundColor: '#9932cc',
+                  backgroundColor: (theme) => theme.palette.primary.main,
                   '&:hover': {
                     backgroundColor: '#b44ee6',
                   }
@@ -128,7 +130,7 @@ function Navbar() {
             </Box>
           )}
         </Toolbar>
-      </Container>
+      </Box>
     </AppBar>
   );
 }

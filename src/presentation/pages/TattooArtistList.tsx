@@ -35,26 +35,24 @@ export default function TattooArtistList() {
   }
 
   return (
-    <Box sx={{ display: 'flex', gap: 2, padding: 2 }}>
-    {/* Filtro no canto esquerdo */}
-    <Box sx={{ width: '250px' }}>
-      <ExpandedFilter />
-    </Box>
+    <Box sx={{ display: 'flex', gap: 2, padding: 2, mt:10 }}>
+      <Box sx={{ width: '250px' }}>
+        <ExpandedFilter />
+      </Box>
 
-    {/* Lista de Cards começa ao lado do filtro */}
-    <Box sx={{ flexGrow: 1 }}>
-      <Stack spacing={4}>
-        <SearchBar />
-        <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-          {artists.map((artist) => (
-            <Grid key={artist.id} size={{ xs: 2, sm: 4, md: 3 }} component="div">
-              <TattooArtistCard artist={artist} />
-            </Grid>
-          ))}
-        </Grid>
-      </Stack>
+      <Box sx={{ flexGrow: 1 }}>
+        <Stack spacing={4}>
+          <SearchBar />
+          <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+            {artists.map((artist) => (
+              <Grid key={artist.id} size={{ xs: 2, sm: 4, md: 3 }} component="div">
+                <TattooArtistCard artist={artist} />
+              </Grid>
+            ))}
+          </Grid>
+        </Stack>
+      </Box>
     </Box>
-  </Box>
     // <Stack spacing={4}>  
     //   <SearchBar />
     //   <ExpandedFilter />
