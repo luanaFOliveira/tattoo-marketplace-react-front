@@ -32,6 +32,7 @@ export default function TattooArtistList() {
   const [locations, setLocations] = useState<string[]>([]);
   const getAllCategoriesUseCase = new GetAllCategoriesUseCase(new CategoryApi());
   
+  const [name, setSearchTerm] = React.useState<string>("");
 
   const fetchArtists = async () => {
     try {
@@ -39,6 +40,7 @@ export default function TattooArtistList() {
       const filters = {
         category, 
         location, 
+        name,
       };
       const data = await getAllTattooArtistUseCase.execute(filters);
       setArtists(data);
@@ -51,7 +53,7 @@ export default function TattooArtistList() {
 
   useEffect(() => {
     fetchArtists();
-  }, [category, location]);
+  }, [category, location,name]);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -81,6 +83,11 @@ export default function TattooArtistList() {
     fetchArtists(); 
   };
 
+  const handleSearch = (term: string) => {
+    setSearchTerm(term);
+    fetchArtists();
+  };
+
   if (loading) {
     return <CircularProgress sx={{ display: "block", margin: "auto", mt: 5 }} />;
   }
@@ -106,7 +113,7 @@ export default function TattooArtistList() {
         <Stack spacing={4}>
           {isSmallScreen ? (
             <Box sx={{ display: 'flex', gap: 2 }}>
-              <SearchBar />
+              <SearchBar onSearch={handleSearch} />
               <FilterBox 
                 category={category}
                 location={location}
@@ -118,7 +125,7 @@ export default function TattooArtistList() {
               />
             </Box>
           ) : (
-            <SearchBar />
+            <SearchBar onSearch={handleSearch} />
           )}
 
           <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>

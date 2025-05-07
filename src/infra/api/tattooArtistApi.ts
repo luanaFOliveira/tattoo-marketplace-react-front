@@ -13,13 +13,14 @@ export class TattooArtistApi implements TattooArtistRepository {
         return this.mapToTattooArtist(data);
     }
     
-    async getAllTattooArtists(filters: { category?: string, location?: string, sortBy?: string, sortOrder?: string }): Promise<TattooArtist[]> {
-      const { category, location, sortBy, sortOrder } = filters;
+    async getAllTattooArtists(filters: { category?: string, location?: string, name?:string, sortBy?: string, sortOrder?: string }): Promise<TattooArtist[]> {
+      const { category, location,name, sortBy, sortOrder } = filters;
 
       const url = new URL("http://localhost:8089/tattoo-artist");
 
       if (category) url.searchParams.append("category", category);
       if (location) url.searchParams.append("location", location);
+      if (name) url.searchParams.append("name", name);
       if (sortBy) url.searchParams.append("sortBy", sortBy);
       if (sortOrder) url.searchParams.append("sortOrder", sortOrder);
 
