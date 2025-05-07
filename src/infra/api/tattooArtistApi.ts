@@ -13,15 +13,24 @@ export class TattooArtistApi implements TattooArtistRepository {
         return this.mapToTattooArtist(data);
     }
     
-    async getAllTattooArtists(): Promise<TattooArtist[]> {
-        const response = await fetch(`http://localhost:8089/tattoo-artist`, {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        });
+    async getAllTattooArtists(filters: { category?: string, location?: string, sortBy?: string, sortOrder?: string }): Promise<TattooArtist[]> {
+      const { category, location, sortBy, sortOrder } = filters;
+
+      const url = new URL("http://localhost:8089/tattoo-artist");
+
+      if (category) url.searchParams.append("category", category);
+      if (location) url.searchParams.append("location", location);
+      if (sortBy) url.searchParams.append("sortBy", sortBy);
+      if (sortOrder) url.searchParams.append("sortOrder", sortOrder);
+
+      const response = await fetch(url.toString(), {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
     
-        const data = await response.json();
+      const data = await response.json();
     
-        return data.map((artist: any) => this.mapToTattooArtist(artist));
+      return data.map((artist: any) => this.mapToTattooArtist(artist));
     }
 
     async registerTattooArtist(data: TattooArtistRequest, profilePicture: File | null): Promise<{ id: number }> {
@@ -98,6 +107,17 @@ export class TattooArtistApi implements TattooArtistRepository {
     
       const responseData = await response.json();
       return this.mapToTattooArtist(responseData);
+    }
+
+    async getTattooArtistLocations(): Promise<string[]> {
+      const response = await fetch(`http://localhost:8089/tattoo-artist/cities`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+  
+      const data = await response.json();
+  
+      return data;
     }
 
 
