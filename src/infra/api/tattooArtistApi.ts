@@ -4,7 +4,7 @@ import { RateTattooArtistRequest, TattooArtist, TattooArtistRequest, UpdateTatto
 export class TattooArtistApi implements TattooArtistRepository {
 
     async getTattooArtist(id: string): Promise<TattooArtist> {
-        const response = await fetch(`http://localhost:8089/tattoo-artist/${id}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/tattoo-artist/${id}`, {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         });
@@ -16,7 +16,7 @@ export class TattooArtistApi implements TattooArtistRepository {
     async getAllTattooArtists(filters: { category?: string, location?: string, name?:string, sortBy?: string, sortOrder?: string }): Promise<TattooArtist[]> {
       const { category, location,name, sortBy, sortOrder } = filters;
 
-      const url = new URL("http://localhost:8089/tattoo-artist");
+      const url = new URL(`${process.env.NEXT_PUBLIC_API_BASE_URL}/tattoo-artist`);
 
       if (category) url.searchParams.append("category", category);
       if (location) url.searchParams.append("location", location);
@@ -44,7 +44,7 @@ export class TattooArtistApi implements TattooArtistRepository {
       }
     
     
-      const response = await fetch(`http://localhost:8089/tattoo-artist/register`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/tattoo-artist/register`, {
         method: "POST",
         body: formData,
       });
@@ -70,7 +70,7 @@ export class TattooArtistApi implements TattooArtistRepository {
       const storedUser = localStorage.getItem("user");
       const token = storedUser ? JSON.parse(storedUser).token : null;
     
-      const response = await fetch(`http://localhost:8089/tattoo-artist/${id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/tattoo-artist/${id}`, {
         method: "PUT",
         body: formData,
         headers: token ? { Authorization: `Bearer ${token}` } : undefined,
@@ -96,7 +96,7 @@ export class TattooArtistApi implements TattooArtistRepository {
       const storedUser = localStorage.getItem("user");
       const token = storedUser ? JSON.parse(storedUser).token : null;
     
-      const response = await fetch(`http://localhost:8089/tattoo-artist/portifolio/${id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/tattoo-artist/portifolio/${id}`, {
         method: "PUT",
         body: formData,
         headers: token ? { Authorization: `Bearer ${token}` } : undefined,
@@ -111,7 +111,7 @@ export class TattooArtistApi implements TattooArtistRepository {
     }
 
     async getTattooArtistLocations(): Promise<string[]> {
-      const response = await fetch(`http://localhost:8089/tattoo-artist/cities`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/tattoo-artist/cities`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });
@@ -122,7 +122,7 @@ export class TattooArtistApi implements TattooArtistRepository {
     }
 
     async rateTattooArtist(id: string, data: RateTattooArtistRequest): Promise<TattooArtist> {
-      const response = await fetch(`http://localhost:8089/tattoo-artist/rate/${id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/tattoo-artist/rate/${id}`, {
         method: "PUT",
         body: JSON.stringify(data),
         headers: { "Content-Type": "application/json" },

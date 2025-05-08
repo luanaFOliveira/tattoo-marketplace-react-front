@@ -4,7 +4,7 @@ import { StatusRepository } from "@/domain/repositories/statusRepository";
 export class StatusApi implements StatusRepository {
 
     async getAllStatus(): Promise<Status[]> {
-        const response = await fetch(`http://localhost:8089/status`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/status`, {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         });

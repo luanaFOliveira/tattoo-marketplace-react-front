@@ -11,7 +11,7 @@ export class AuthApi implements AuthRepository {
   }
 
   async login(userData:LoginRequest): Promise<LoginResponse> {
-    const response = await fetch("http://localhost:8089/auth/login", {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login`, {
       method: "POST",
       body: JSON.stringify(userData),
       headers: { "Content-Type": "application/json" },
@@ -46,7 +46,7 @@ export class AuthApi implements AuthRepository {
       formData.append("profile_img", profileImage);
     }
   
-    const response = await fetch("http://localhost:8089/user/register", {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/register`, {
       method: "POST",
       body: formData,
     });

@@ -7,7 +7,7 @@ export class QuoteApi implements QuoteRepository {
         const storedUser = localStorage.getItem("user");
         const token = storedUser ? JSON.parse(storedUser).token : null;
 
-        const response = await fetch(`http://localhost:8089/quote/${id}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/quote/${id}`, {
           method: "GET",
           headers: { "Content-Type": "application/json" , Authorization: `Bearer ${token}`},
         });
@@ -21,7 +21,7 @@ export class QuoteApi implements QuoteRepository {
         const storedUser = localStorage.getItem("user");
         const token = storedUser ? JSON.parse(storedUser).token : null;
         const userId = storedUser ? JSON.parse(storedUser).id : null;
-        const response = await fetch(`http://localhost:8089/quote/user/${userId}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/quote/user/${userId}`, {
           method: "GET",
           headers: { "Content-Type": "application/json" , Authorization: `Bearer ${token}`},
         });
@@ -39,7 +39,7 @@ export class QuoteApi implements QuoteRepository {
       const storedUser = localStorage.getItem("user");
       const token = storedUser ? JSON.parse(storedUser).token : null;
       const userId = storedUser ? JSON.parse(storedUser).id : null;
-      const response = await fetch(`http://localhost:8089/quote/tattoo-artist/${userId}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/quote/tattoo-artist/${userId}`, {
         method: "GET",
         headers: { "Content-Type": "application/json" , Authorization: `Bearer ${token}`},
       });
@@ -66,7 +66,7 @@ export class QuoteApi implements QuoteRepository {
       const storedUser = localStorage.getItem("user");
       const token = storedUser ? JSON.parse(storedUser).token : null;
 
-      const response = await fetch(`http://localhost:8089/quote/register`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/quote/register`, {
         method: "POST",
         body: formData,
         headers: token ? { Authorization: `Bearer ${token}` } : undefined,
@@ -85,7 +85,7 @@ export class QuoteApi implements QuoteRepository {
       const storedUser = localStorage.getItem("user");
       const token = storedUser ? JSON.parse(storedUser).token : null;
     
-      const response = await fetch(`http://localhost:8089/quote/${id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/quote/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

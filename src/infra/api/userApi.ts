@@ -7,7 +7,7 @@ export class UserApi implements UserRepository {
     const storedUser = localStorage.getItem("user");
     const token = storedUser ? JSON.parse(storedUser).token : null;
 
-    const response = await fetch(`http://localhost:8089/user/${id}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/${id}`, {
         method: "GET",
         headers: { "Content-Type": "application/json" , Authorization: `Bearer ${token}`},
     });
@@ -28,7 +28,7 @@ export class UserApi implements UserRepository {
     const storedUser = localStorage.getItem("user");
     const token = storedUser ? JSON.parse(storedUser).token : null;
   
-    const response = await fetch(`http://localhost:8089/user/${id}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/${id}`, {
       method: "PUT",
       body: formData,
       headers: token ? { Authorization: `Bearer ${token}` } : undefined,
