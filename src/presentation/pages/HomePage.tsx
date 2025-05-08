@@ -14,45 +14,11 @@ import TattooArtistSlider from "../components/TattooArtistSlider";
 import Link from 'next/link';
 
 export default function HomePage() {
-//   const [artists, setArtists] = useState<TattooArtist[]>([]);
-//   const [loading, setLoading] = useState(true);
-//   const getAllTattooArtistUseCase = new GetAllTattooArtistUseCase(new TattooArtistApi());
-
-//   useEffect(() => {
-//     const fetchArtists = async () => {
-//       try {
-//         const data = await getAllTattooArtistUseCase.execute();
-//         setArtists(data);
-//       } catch (error) {
-//         console.error("Erro ao buscar tatuadores:", error);
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-
-//     fetchArtists();
-//   }, []);
-
-//   if (loading) {
-//     return <CircularProgress sx={{ display: "block", margin: "auto", mt: 5 }} />;
-//   }
 
 return (
     <>
       <Stack spacing={4} alignItems="center">
-        {/* <Stack spacing={4} direction="row" alignItems="center">
-          <SearchBar />
-          <FilterBox />
-        </Stack> */}
-  
-        {/* <Button 
-          variant="contained" 
-          color="primary"
-          sx={{ borderRadius: 6, width: '200px', height: '40px' }}
-        >
-          Search
-        </Button> */}
-  
+
         <Stack 
           direction="row" 
           alignItems="center" 

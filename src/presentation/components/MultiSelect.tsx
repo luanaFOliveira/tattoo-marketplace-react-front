@@ -55,14 +55,14 @@ export default function MultiSelect<T extends Item>({
         )}
         sx={{
           '& .MuiSelect-select': {
-            backgroundColor: '#1e1e1e',  // cor do fundo
-            color: '#eaeaea',  // cor do texto
+            backgroundColor: '#1e1e1e',  
+            color: '#eaeaea',  
           },
           '& .MuiOutlinedInput-notchedOutline': {
-            borderColor: '#444444',  // cor da borda
+            borderColor: '#444444',  
           },
           '&:hover .MuiOutlinedInput-notchedOutline': {
-            borderColor: '#666666',  // cor da borda ao passar o mouse
+            borderColor: '#666666', 
           },
         }}
       >

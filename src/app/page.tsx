@@ -29,12 +29,12 @@ export default function Home() {
             pt: 0, 
         }}
       >
-        <Typography variant="h4" color="primary" align="center" sx={{ mt: -10, mb: 10 }}>  
+        <Typography variant="h4" color="primary" align="center" sx={{ mt: -10, mb: 6 }}>  
             Find The Perfect Tattoo Artist For Your Next Piece
         </Typography>
-        {/* <Typography variant="h6" color="primary" align="center" sx={{ mt: 4, mb: 4 }}>
+        <Typography variant="h6" color="primary" align="center" sx={{ mb: 6 }}>
             Search by name, category or location
-        </Typography> */}
+        </Typography>
         <HomePage />
         
       </Box>
@@ -46,20 +46,11 @@ export default function Home() {
           backgroundRepeat: "no-repeat",
           backgroundSize: "contain",
           backgroundPosition: "top center", 
+          marginTop: 10,
         }}
       />
 
     </Box>
-    {/* <TattooArtistList /> */}
-
-      {/* <Container maxWidth="xl" sx={{marginTop: 5 }}>
-        <Stack spacing={4}>  
-          <Typography variant="h4" color="primary" align="center">
-            Find the perfect tattoo artist for your next piece
-          </Typography>
-          <TattooArtistList />
-        </Stack>
-      </Container> */}
     </main>
   );
 }

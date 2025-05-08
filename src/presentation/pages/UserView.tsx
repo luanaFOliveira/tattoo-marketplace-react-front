@@ -24,7 +24,6 @@ export default function UserView({ userId }: { userId: string }) {
   const [loading, setLoading] = useState(true);
   const [openModal, setOpenModal] = useState(false);
   const { user, isAuthenticated } = useAuth(); 
-  //const router = useRouter();
   const getTattooArtistUseCase = new GetTattooArtistUseCase(new TattooArtistApi());
   const getUserUseCase = new GetUserUseCase(new UserApi());
 

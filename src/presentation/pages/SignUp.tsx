@@ -101,7 +101,6 @@ const FadeText = () => {
 export default function SignUp() {
   return (
     <FadeText />
-    // <AuthLayout content={<FadeText />} />
   );
 }
 
