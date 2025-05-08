@@ -1,5 +1,5 @@
 import { TattooArtistRepository } from "@/domain/repositories/tattooArtistRepository";
-import { TattooArtist, TattooArtistRequest, UpdateTattooArtistRequest } from "@/domain/entities/tattoo-artist";
+import { RateTattooArtistRequest, TattooArtist, TattooArtistRequest, UpdateTattooArtistRequest } from "@/domain/entities/tattoo-artist";
 
 export class TattooArtistApi implements TattooArtistRepository {
 
@@ -119,6 +119,21 @@ export class TattooArtistApi implements TattooArtistRepository {
       const data = await response.json();
   
       return data;
+    }
+
+    async rateTattooArtist(id: string, data: RateTattooArtistRequest): Promise<TattooArtist> {
+      const response = await fetch(`http://localhost:8089/tattoo-artist/rate/${id}`, {
+        method: "PUT",
+        body: JSON.stringify(data),
+        headers: { "Content-Type": "application/json" },
+      });
+    
+      if (!response.ok) {
+        throw new Error("Erro ao avaliar o tatuador");
+      }
+    
+      const responseData = await response.json();
+      return this.mapToTattooArtist(responseData);
     }
 
 

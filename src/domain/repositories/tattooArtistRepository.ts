@@ -1,4 +1,4 @@
-import { TattooArtist, TattooArtistRequest, UpdateTattooArtistRequest} from "@/domain/entities/tattoo-artist";
+import { RateTattooArtistRequest, TattooArtist, TattooArtistRequest, UpdateTattooArtistRequest} from "@/domain/entities/tattoo-artist";
 
 
 export interface TattooArtistRepository {
@@ -8,4 +8,5 @@ export interface TattooArtistRepository {
     updateTattooArtist(id: string, data: UpdateTattooArtistRequest, profilePicture: File | null): Promise<TattooArtist>;
     addPortifolioImages(id: string, images: File[]): Promise<TattooArtist>;
     getTattooArtistLocations(): Promise<string[]>;
+    rateTattooArtist(id: string, data: RateTattooArtistRequest): Promise<TattooArtist>;
 }

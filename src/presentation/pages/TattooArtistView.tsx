@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useState } from "react";
-import { CircularProgress, Divider,Typography, Avatar, Card, CardContent, CardMedia, Box, Chip, Button } from "@mui/material";
-import { TattooArtist } from "@/domain/entities/tattoo-artist";
+import { CircularProgress, Divider,Typography, Avatar, Card, CardContent, CardMedia, Box, Chip, Button, Rating } from "@mui/material";
+import { RateTattooArtistRequest, TattooArtist } from "@/domain/entities/tattoo-artist";
 import { TattooArtistApi } from "@/infra/api/tattooArtistApi";
 import QuoteRequestModal from "@/presentation/components/QuoteRequestModal";
 import { useAuth } from "@/presentation/context/AuthContext";
@@ -13,14 +13,23 @@ import { Fab } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add"; 
 import { GetTattooArtistUseCase } from "@/application/tattoo-artist/getTattooArtistUseCase";
 import ImageGallery from "@/presentation/components/ImageGallery";
+import RateReviewIcon from '@mui/icons-material/RateReview';
+import RatingPopover from "@/presentation/components/RatingPopover";
+import { RateTattooArtistUseCase } from "@/application/tattoo-artist/rateTattooArtistUseCase";
 
 export default function TattooArtistView({ tattooArtistId }: { tattooArtistId: string }) {
   const [artist, setArtist] = useState<TattooArtist | null>(null);
   const [loading, setLoading] = useState(true);
-  const [openModal, setOpenModal] = useState(false);
+  const [openQuoteModal, setOpenQuoteModal] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const [rating, setRating] = useState<number>(0); 
+  const [rateTattooArtist, setRateTattooArtist] = useState<RateTattooArtistRequest>({
+      rate: 0
+  });
   const { user, isAuthenticated } = useAuth(); 
   const router = useRouter();
   const getTattooArtistUseCase = new GetTattooArtistUseCase(new TattooArtistApi());
+  const rateTattooArtistUseCase = new RateTattooArtistUseCase(new TattooArtistApi());
 
   useEffect(() => {
     const fetchArtist = async () => {
@@ -38,6 +47,23 @@ export default function TattooArtistView({ tattooArtistId }: { tattooArtistId: s
     fetchArtist();
   }, [tattooArtistId]);
 
+  useEffect(() => {
+    const rateArtist = async () => {
+      try {
+        const data = await rateTattooArtistUseCase.execute(tattooArtistId, rateTattooArtist);
+        setArtist(data);
+      } catch (error) {
+        console.error("Erro ao buscar tatuador:", error);
+        toast.error("Erro ao buscar tatuador");
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    rateArtist();
+  }, []);
+  
+
   if (loading) {
     return <CircularProgress sx={{ display: "block", margin: "auto", mt: 5 }} />;
   }
@@ -48,15 +74,41 @@ export default function TattooArtistView({ tattooArtistId }: { tattooArtistId: s
 
   const handleQuoteRequest = () => {
     if (!isAuthenticated) {
-      toast.error("Para solicitar um orçamento é necessário estar logado");
+      toast.error("You must be logged in to request a quote.");
       router.push("/login");
     } else {
-      setOpenModal(true);
+      setOpenQuoteModal(true);
     }
   };
 
+  const handleButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (!isAuthenticated) {
+      toast.error("You need to be logged in to rate a tattoo artist.");
+      router.push("/login");
+    } else {
+      setAnchorEl(event.currentTarget);
+    }
+  };
+
+  const handleSubmitRating = async () => {
+    setAnchorEl(null); 
+  
+    try {
+      const updatedArtist = await rateTattooArtistUseCase.execute(tattooArtistId, rateTattooArtist);
+      setArtist(updatedArtist);
+      toast.success("Rating submitted successfully!");
+    } catch (error) {
+      console.error("Failed to submit rating:", error);
+      toast.error("Failed to submit rating.");
+    }
+  };
+
+  const handleClose = async () => {
+    setAnchorEl(null); 
+  };
+
   return(
-    <Box sx={{ width: "100%", px: 2, mt: 5 }}>
+    <Box sx={{ width: "100%", px: 2, mt: 10 }}>
       <Box 
         sx={{ 
           position: "relative", 
@@ -79,6 +131,16 @@ export default function TattooArtistView({ tattooArtistId }: { tattooArtistId: s
           <Typography variant="body1" color="white" sx={{ mt: 1 }}>
             📍 {artist.location}
           </Typography>
+          <Rating 
+            name="read-only" 
+            value={artist.rate} 
+            precision={0.5} 
+            readOnly 
+            sx={{
+            '& .MuiRating-iconEmpty': {
+            color: 'white', 
+            }
+          }}/>
           <Typography variant="body1" color="white">
             ⭐ {artist.rate} / 5
           </Typography>
@@ -86,26 +148,54 @@ export default function TattooArtistView({ tattooArtistId }: { tattooArtistId: s
           {artist.categories.length > 0 && (
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 2 }}>
               {artist.categories.map((category) => (
-                <Chip key={category.id} label={category.name} color="primary"/>
+                <Chip key={category.id} label={category.name} color="primary" variant="outlined"/>
               ))}
             </Box>
           )}
         </Box>
 
-        <Fab 
-          size="medium"
-          variant="extended"
-          color="primary"
-          onClick={handleQuoteRequest}
-          aria-label="request-quote"
-          sx={{ 
-            position: "absolute", 
-            bottom: 0, 
-            right: 0 
+        <Box  
+          sx={{
+            position: "absolute",
+            bottom: 0,
+            right: 0,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 1,
           }}
         >
-          <AddIcon sx={{ mr: 1 }} /> Request Quote
-        </Fab>
+          <Fab 
+            size="medium"
+            variant="extended"
+            color="primary"
+            onClick={handleQuoteRequest}
+            aria-label="request-quote"
+            sx={{ px: 3 }}
+          >
+            <AddIcon sx={{ mr: 1 }} /> Request Quote
+          </Fab>
+
+          <Fab 
+            size="small"
+            variant="extended"
+            onClick={handleButtonClick}
+            aria-label="rate-artist"
+            sx={{
+              px: 2,
+              backgroundColor: '#4b0082',
+              color: '#ffffff',
+              '&:hover': {
+                backgroundColor: '#5d1d9f',
+                color: '#ffffff'
+              }
+            }}
+          >
+            <RateReviewIcon sx={{ mr: 1, fontSize: 16 }} /> Rate
+          </Fab>
+        </Box>
+
+
       </Box>
 
       <Divider sx={{ my: 4, color: "white", borderColor: "white", fontWeight: "bold" }}>
@@ -134,8 +224,16 @@ export default function TattooArtistView({ tattooArtistId }: { tattooArtistId: s
 
       <QuoteRequestModal 
         tattooArtist={artist} 
-        open={openModal} 
-        onClose={() => setOpenModal(false)} 
+        open={openQuoteModal} 
+        onClose={() => setOpenQuoteModal(false)} 
+      />
+      <RatingPopover
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        value={rateTattooArtist.rate}
+        onChange={(newValue) => setRateTattooArtist({ rate: newValue ?? 0 })}
+        onClose={handleClose}
+        onSubmit={handleSubmitRating}
       />
     </Box>
 

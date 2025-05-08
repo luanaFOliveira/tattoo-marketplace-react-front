@@ -21,5 +21,8 @@ export interface TattooArtistRequest extends UserRequest {
 
 export interface UpdateTattooArtistRequest extends UpdateUserRequest {
     categoryIds: number[];
+}
+
+export interface RateTattooArtistRequest{
     rate: number;
 }
