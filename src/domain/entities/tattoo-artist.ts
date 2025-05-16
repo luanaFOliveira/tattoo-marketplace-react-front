@@ -26,3 +26,20 @@ export interface UpdateTattooArtistRequest extends UpdateUserRequest {
 export interface RateTattooArtistRequest{
     rate: number;
 }
+
+export interface TattooArtistApiResponse {
+    id: number;
+    email: string;
+    name: string;
+    location: string;
+    age: number;
+    rate: number;
+    profilePicture: string;
+    categories: Category[];
+  };
+  
+  export interface TattooArtistExtendedApiResponse extends TattooArtistApiResponse {
+    createdAt: string;
+    updatedAt: string;
+    images: string[];
+};

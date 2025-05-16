@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
@@ -16,6 +16,9 @@ import { TattooArtist } from "@/domain/entities/tattoo-artist";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { styled } from '@mui/material/styles';
 import { Divider } from "@mui/material";
+import Image from "next/image";
+
+
 
 const style = {
   position: "absolute",
@@ -83,25 +86,26 @@ export default function QuoteRequestModal({
 
   const handleSubmit = async () => {
     setLoading(true);
-
+  
     if (isNaN(quote.size) || quote.size <= 0) {
-      toast.error("Tamanho inválido.");
+      toast.error("Invalid size.");
       setLoading(false);
       return;
     }
-
+  
     try {
       const { id } = await registerQuoteUseCase.execute(quote, images);
-      console.log("Quote cadastrado:", id);
-      toast.success("Cadastro realizado com sucesso.");
+      console.log("Quote registered:", id);
+      toast.success("Quote registered successfully.");
       onClose(); 
     } catch (error) {
-      console.error("Erro no cadastro:", error);
-      toast.error("Erro ao cadastrar quote.");
+      console.error("Registration error:", error);
+      toast.error("Failed to register quote.");
     } finally {
       setLoading(false);
     }
   };
+  
 
   return (
     <Modal open={open} onClose={onClose} aria-labelledby="modal-title" aria-describedby="modal-description">
@@ -195,10 +199,13 @@ export default function QuoteRequestModal({
               <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap", mt: 1 }}>
                 {images.map((image, index) => (
                   <Box key={index} sx={{ width: 80, height: 80, borderRadius: 2, overflow: "hidden" }}>
-                    <img
+                    <Image
                       src={URL.createObjectURL(image)}
                       alt={`preview-${index}`}
-                      style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                      width={80}
+                      height={80}
+                      unoptimized
+                      style={{ objectFit: "cover", borderRadius: "8px" }}
                     />
                   </Box>
                 ))}

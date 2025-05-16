@@ -1,4 +1,3 @@
-import { Container, Box, Typography, Paper } from "@mui/material";
 import TattooArtistView from "@/presentation/pages/TattooArtistView";
 
 export default async function TattooArtistDetail({

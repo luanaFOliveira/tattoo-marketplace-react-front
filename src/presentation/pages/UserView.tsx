@@ -1,8 +1,7 @@
 'use client';
 import React, { useEffect, useState } from "react";
-import { CircularProgress,Divider, Typography, Avatar, Chip, CardMedia, Box, Button } from "@mui/material";
+import { CircularProgress,Divider, Typography, Avatar, Chip,  Box } from "@mui/material";
 import { useAuth } from "@/presentation/context/AuthContext";
-import { useRouter } from 'next/navigation'
 import { toast } from "react-toastify";
 import { UserDetail } from "@/domain/entities/user";
 import { UserApi } from "@/infra/api/userApi";
@@ -18,26 +17,31 @@ import { GetTattooArtistUseCase } from "@/application/tattoo-artist/getTattooArt
 import { GetUserUseCase } from "@/application/user/getUserUseCase";
 import TattooArtistTab from "@/presentation/components/TattooArtistTab";
 import GradeIcon from '@mui/icons-material/Grade';
+import { useRouter } from 'next/navigation'
+
+
+const getTattooArtistUseCase = new GetTattooArtistUseCase(new TattooArtistApi());
+const getUserUseCase = new GetUserUseCase(new UserApi());
 
 export default function UserView({ userId }: { userId: string }) {
   const [userData, setUserData] = useState< UserDetail | TattooArtist |null>(null);
   const [loading, setLoading] = useState(true);
   const [openModal, setOpenModal] = useState(false);
-  const { user, isAuthenticated } = useAuth(); 
-  const getTattooArtistUseCase = new GetTattooArtistUseCase(new TattooArtistApi());
-  const getUserUseCase = new GetUserUseCase(new UserApi());
-
+  const { user} = useAuth(); 
+  const router = useRouter();
+ 
   const handleOpenModal = () => {
     setOpenModal(true);
   };
 
   const handleCloseModal = () => {
-    setOpenModal(false); 
+    setOpenModal(false);
+    router.refresh();
   };
 
   useEffect(() => {
     if (!user) return; 
-  
+    setLoading(true);
     const fetchUser = async () => {
       try {
         if (user.isTattooArtist) {
@@ -48,8 +52,8 @@ export default function UserView({ userId }: { userId: string }) {
           setUserData(data);
         }
       } catch (error) {
-        console.error("Erro ao buscar usuário:", error);
-        toast.error("Erro ao buscar usuário");
+        console.error("Failed to fetch user:", error);
+        toast.error("Failed to fetch user");
       } finally {
         setLoading(false);
       }
@@ -60,16 +64,20 @@ export default function UserView({ userId }: { userId: string }) {
   
 
   if (loading) {
-    return <CircularProgress sx={{ display: "block", margin: "auto", mt: 5 }} />;
+    return <CircularProgress sx={{ display: "block", margin: "auto", mt: 10 }} />;
   }
 
   if (!userData) {
-    return <Typography variant="h6" color="error">Usuario não encontrado</Typography>;
+    return <Typography variant="h6" color="error">User not found</Typography>;
+  }
+
+  if (!user) {
+    return <CircularProgress sx={{ display: "block", margin: "auto", mt: 10 }} />;
   }
 
 
   return (<>
-   <Box sx={{ width: "100%", px: 2, mt: 5 }}>
+   <Box sx={{ width: "100%", px: 2, mt: 10 }}>
       <Box 
         sx={{ 
           position: "relative", 
@@ -80,7 +88,7 @@ export default function UserView({ userId }: { userId: string }) {
         }}
       >
         <Avatar 
-          src={`http://localhost:8089${userData.profilePicture}`} 
+          src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${userData.profilePicture}`} 
           alt={userData.name}
           sx={{ width: 150, height: 150 }}
         />
@@ -95,9 +103,11 @@ export default function UserView({ userId }: { userId: string }) {
           <Typography variant="body1" color="white">
             <EmailIcon/> {userData.email}
           </Typography>
-          <Typography variant="body1" color="white">
-            <GradeIcon/> {userData.rate?? "Not rated yet"}
-          </Typography>
+          {"rate" in userData ? (
+            <Typography variant="body1" color="white">
+              <GradeIcon /> {userData.rate ?? "Not rated yet"}
+            </Typography>
+          ) : null}
 
           {user?.isTattooArtist && "categories" in userData && userData.categories && (
             <Box mt={2} display="flex" flexWrap="wrap" gap={1}>

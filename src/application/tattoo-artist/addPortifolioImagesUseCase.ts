@@ -1,4 +1,4 @@
-import { TattooArtist, UpdateTattooArtistRequest } from "@/domain/entities/tattoo-artist";
+import { TattooArtist } from "@/domain/entities/tattoo-artist";
 import { TattooArtistRepository } from "@/domain/repositories/tattooArtistRepository";
 
 export class AddPortifolioImagesUseCase {

@@ -1,8 +1,4 @@
-import { Box, Container, Typography, Stack } from "@mui/material";
-import Link from "next/link";
-import Navbar from "../presentation/components/Navbar";
-import SearchBar from "@/presentation/components/SearchBar";
-import TattooArtistList from "@/presentation/pages/TattooArtistList";
+import { Box, Typography } from "@mui/material";
 import HomePage from "@/presentation/pages/HomePage";
 
 export default function Home() {

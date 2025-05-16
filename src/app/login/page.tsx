@@ -1,4 +1,3 @@
-import { Container, Box, Typography, Paper } from "@mui/material";
 import LoginForm from "../../presentation/components/LoginForm";
 import AuthLayout from "@/presentation/pages/AuthLayout";
 export default function LoginPage() {

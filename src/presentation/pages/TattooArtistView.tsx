@@ -1,14 +1,12 @@
 'use client';
 import React, { useEffect, useState } from "react";
-import { CircularProgress, Divider,Typography, Avatar, Card, CardContent, CardMedia, Box, Chip, Button, Rating } from "@mui/material";
+import { CircularProgress, Divider,Typography, Avatar, Box, Chip, Rating } from "@mui/material";
 import { RateTattooArtistRequest, TattooArtist } from "@/domain/entities/tattoo-artist";
 import { TattooArtistApi } from "@/infra/api/tattooArtistApi";
 import QuoteRequestModal from "@/presentation/components/QuoteRequestModal";
 import { useAuth } from "@/presentation/context/AuthContext";
 import { useRouter } from 'next/navigation'
 import { toast } from "react-toastify";
-import Image from 'next/image'
-import CardActions from '@mui/material/CardActions';
 import { Fab } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add"; 
 import { GetTattooArtistUseCase } from "@/application/tattoo-artist/getTattooArtistUseCase";
@@ -17,19 +15,20 @@ import RateReviewIcon from '@mui/icons-material/RateReview';
 import RatingPopover from "@/presentation/components/RatingPopover";
 import { RateTattooArtistUseCase } from "@/application/tattoo-artist/rateTattooArtistUseCase";
 
+const getTattooArtistUseCase = new GetTattooArtistUseCase(new TattooArtistApi());
+const rateTattooArtistUseCase = new RateTattooArtistUseCase(new TattooArtistApi());
+
 export default function TattooArtistView({ tattooArtistId }: { tattooArtistId: string }) {
   const [artist, setArtist] = useState<TattooArtist | null>(null);
   const [loading, setLoading] = useState(true);
   const [openQuoteModal, setOpenQuoteModal] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const [rating, setRating] = useState<number>(0); 
   const [rateTattooArtist, setRateTattooArtist] = useState<RateTattooArtistRequest>({
       rate: 0
   });
-  const { user, isAuthenticated } = useAuth(); 
+  const { isAuthenticated } = useAuth(); 
   const router = useRouter();
-  const getTattooArtistUseCase = new GetTattooArtistUseCase(new TattooArtistApi());
-  const rateTattooArtistUseCase = new RateTattooArtistUseCase(new TattooArtistApi());
+  
 
   useEffect(() => {
     const fetchArtist = async () => {
@@ -53,15 +52,15 @@ export default function TattooArtistView({ tattooArtistId }: { tattooArtistId: s
         const data = await rateTattooArtistUseCase.execute(tattooArtistId, rateTattooArtist);
         setArtist(data);
       } catch (error) {
-        console.error("Erro ao buscar tatuador:", error);
-        toast.error("Erro ao buscar tatuador");
+        console.error("Failed to fetch tattoo artist:", error);
+        toast.error("Failed to fetch tattoo artist");
       } finally {
         setLoading(false);
       }
     };
   
     rateArtist();
-  }, []);
+  }, [tattooArtistId,rateTattooArtist]);
   
 
   if (loading) {
@@ -69,7 +68,7 @@ export default function TattooArtistView({ tattooArtistId }: { tattooArtistId: s
   }
 
   if (!artist) {
-    return <Typography variant="h6" color="error">Tatuador não encontrado</Typography>;
+    return <Typography variant="h6" color="error">Tattoo Artist not found</Typography>;
   }
 
   const handleQuoteRequest = () => {
@@ -119,7 +118,7 @@ export default function TattooArtistView({ tattooArtistId }: { tattooArtistId: s
         }}
       >
         <Avatar 
-          src={`http://localhost:8089${artist.profilePicture}`} 
+          src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${artist.profilePicture}`} 
           alt={artist.name}
           sx={{ width: 150, height: 150 }}
         />
@@ -139,11 +138,9 @@ export default function TattooArtistView({ tattooArtistId }: { tattooArtistId: s
             sx={{
             '& .MuiRating-iconEmpty': {
             color: 'white', 
-            }
+            },
+            marginTop: 1,
           }}/>
-          <Typography variant="body1" color="white">
-            ⭐ {artist.rate} / 5
-          </Typography>
 
           {artist.categories.length > 0 && (
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 2 }}>

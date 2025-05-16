@@ -1,5 +1,5 @@
 import { TattooArtistRepository } from "@/domain/repositories/tattooArtistRepository";
-import { RateTattooArtistRequest, TattooArtist, TattooArtistRequest, UpdateTattooArtistRequest } from "@/domain/entities/tattoo-artist";
+import { RateTattooArtistRequest, TattooArtist, TattooArtistApiResponse, TattooArtistExtendedApiResponse, TattooArtistRequest, UpdateTattooArtistRequest } from "@/domain/entities/tattoo-artist";
 
 export class TattooArtistApi implements TattooArtistRepository {
 
@@ -29,9 +29,9 @@ export class TattooArtistApi implements TattooArtistRepository {
         headers: { "Content-Type": "application/json" },
       });
     
-      const data = await response.json();
+      const data: TattooArtist[] = await response.json();
     
-      return data.map((artist: any) => this.mapToTattooArtist(artist));
+      return data.map((artist: TattooArtist) => this.mapToTattooArtist(artist));
     }
 
     async registerTattooArtist(data: TattooArtistRequest, profilePicture: File | null): Promise<{ id: number }> {
@@ -139,7 +139,7 @@ export class TattooArtistApi implements TattooArtistRepository {
 
     
 
-  private mapToTattooArtist(data: any): TattooArtist {
+  private mapToTattooArtist(data: TattooArtistApiResponse| TattooArtistExtendedApiResponse): TattooArtist {
     return {
       id: data.id,
       name: data.name,
@@ -148,9 +148,9 @@ export class TattooArtistApi implements TattooArtistRepository {
       age: data.age,
       rate: data.rate,
       categories: data.categories,
-      createdAt: data.createdAt,
-      updatedAt: data.updatedAt,
-      images: data.images,
+      createdAt: "createdAt" in data ? data.createdAt : "",
+      updatedAt: "updatedAt" in data ? data.updatedAt : "",
+      images: "images" in data ? data.images : [],
       profilePicture: data.profilePicture
     };
   }

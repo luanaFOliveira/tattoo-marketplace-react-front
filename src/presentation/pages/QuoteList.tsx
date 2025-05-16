@@ -7,9 +7,11 @@ import { QuoteApi } from "@/infra/api/quoteApi";
 import { Quote } from "@/domain/entities/quote";
 import { useAuth } from "@/presentation/context/AuthContext";  
 import QuoteViewModal from "@/presentation/components/QuoteViewModal";
-import StatusFilterButton from "@/presentation/components/StatusFilterButton";
 import { GetAllQuotesByUserUseCase } from "@/application/quote/getAllQuotesByUserUseCase";
 import { GetAllQuotesByTattooArtistUseCase } from "@/application/quote/getAllQuotesByTattooArtistUseCase";
+
+const getAllQuotesByUserUseCase = new GetAllQuotesByUserUseCase(new QuoteApi());
+const getAllQuotesByTattooArtistUseCase = new GetAllQuotesByTattooArtistUseCase(new QuoteApi());
 
 export default function QuoteList() {
   const [quotes, setQuotes] = useState<Quote[]>([]);
@@ -17,9 +19,7 @@ export default function QuoteList() {
   const { user} = useAuth(); 
   const [selectedQuoteId, setSelectedQuoteId] = useState<number | null>(null);
   const [open, setOpen] = useState(false);
-  const [filteredQuotes, setFilteredQuotes] = useState<Quote[]>([]);
-  const getAllQuotesByUserUseCase = new GetAllQuotesByUserUseCase(new QuoteApi());
-  const getAllQuotesByTattooArtistUseCase = new GetAllQuotesByTattooArtistUseCase(new QuoteApi());
+ 
 
   const handleOpenModal = (quoteId: number) => {
     setSelectedQuoteId(quoteId);
@@ -42,33 +42,24 @@ export default function QuoteList() {
           setQuotes(data);
         }
       } catch (error) {
-        console.error("Erro ao buscar quotes:", error);
+        console.error("Failed to fetch quotes:", error);
       } finally {
         setLoading(false);
       }
     };
 
     fetchQuotes();
-  }, []);
+  }, [user?.id, user?.isTattooArtist]);
 
   if (loading) {
     return <CircularProgress sx={{ display: "block", margin: "auto", mt: 5 }} />;
   }
-
-  const handleFilterChange = (status: string | null) => {
-    if (status === null) {
-      setFilteredQuotes(quotes);
-    } else {
-      setFilteredQuotes(quotes.filter((quote) => quote.status.name.toLowerCase() === status));
-    }
-  };
 
   return (<>
     <Grid container spacing={1}  direction="row" justifyContent="center" alignItems="center">
         <Typography variant="h4" color="white" fontWeight="bold" mt={2}>
             My Quotes
         </Typography>
-        {/* <StatusFilterButton onFilterChange={handleFilterChange} /> */}
     </Grid>
     <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
         {quotes.map((quote) => (

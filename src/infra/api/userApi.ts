@@ -1,5 +1,5 @@
 import { UserRepository } from "@/domain/repositories/userRepository";
-import { UpdateUserRequest, UserDetail } from "@/domain/entities/user";
+import { UpdateUserRequest, UserApiResponse, UserDetail } from "@/domain/entities/user";
 
 export class UserApi implements UserRepository {
 
@@ -42,7 +42,7 @@ export class UserApi implements UserRepository {
     return this.mapToUser(responseData);
   }
 
-   private mapToUser(data: any): UserDetail {
+   private mapToUser(data: UserApiResponse): UserDetail {
       return {
         id: data.id, 
         name: data.name,

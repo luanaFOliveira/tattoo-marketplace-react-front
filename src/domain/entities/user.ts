@@ -47,4 +47,15 @@ export interface LoginResponse {
     profilePicture: string;
 
 }
+
+export interface UserApiResponse{
+    id: number;
+    email: string;
+    name: string;
+    location: string;
+    age: number;
+    createdAt: string; 
+    updatedAt: string;
+    profilePicture: string;
+};
   

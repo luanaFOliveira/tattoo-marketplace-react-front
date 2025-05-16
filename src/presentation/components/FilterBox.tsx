@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { Button, Menu, MenuItem, Select, FormControl, InputLabel, Box, SelectChangeEvent } from '@mui/material';
+import { Button, Menu, MenuItem, FormControl, InputLabel, Box, SelectChangeEvent } from '@mui/material';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { StyledSelect } from '@/app/StyledRoot';
 import { Category } from '@/domain/entities/category';
@@ -10,7 +10,6 @@ interface Props {
     location: string;
     setCategory: (value: string) => void;
     setLocation: (value: string) => void;
-    handleFilters: () => void;
     categories: Category[];
     locations: string[];
 }
@@ -20,7 +19,6 @@ export default function FilterBox({
   location,
   setCategory,
   setLocation,
-  handleFilters,
   categories,
   locations,
 }: Props)

@@ -6,8 +6,6 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
@@ -15,9 +13,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Link from "next/link";
 import { useAuth } from "@/presentation/context/AuthContext";  
 import { useRouter } from 'next/navigation'
-import HubIcon from '@mui/icons-material/Hub';
 import StreamIcon from '@mui/icons-material/Stream';
-import SearchBar from './SearchBar';
 
 const settings = ['Profile', 'Quotes', 'Logout'];
 
@@ -62,8 +58,8 @@ function Navbar() {
           {isAuthenticated ? (
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt={"User"} src={`http://localhost:8089${user?.profilePicture}` || "/static/images/avatar/2.jpg"} />
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 , marginRight: 4 }}>
+                  <Avatar alt={"User"} src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${user?.profilePicture}` || "/static/images/avatar/2.jpg"} />
                 </IconButton>
               </Tooltip>
               <Menu
@@ -85,7 +81,10 @@ function Navbar() {
                 {settings.map((setting) => (
                   <MenuItem key={setting} onClick={() => {
                     handleCloseUserMenu();
-                    if (setting === "Logout") logout(); 
+                    if (setting === "Logout"){
+                      logout();
+                      router.push("/");
+                    }
                     if (setting === "Profile") router.push(`/user/${user?.id}`);
                     if (setting === "Quotes") router.push(`/quote/user/${user?.id}`);
                   }}>

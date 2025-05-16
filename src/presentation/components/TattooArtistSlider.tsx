@@ -5,14 +5,14 @@ import { CircularProgress, Stack, Box, Avatar, Typography } from "@mui/material"
 import { TattooArtist } from "@/domain/entities/tattoo-artist";
 import { TattooArtistApi } from "@/infra/api/tattooArtistApi";
 import { GetAllTattooArtistUseCase } from "@/application/tattoo-artist/getAllTattooArtistUseCase";
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation } from 'swiper/modules';
 
 import { useTheme } from '@mui/material/styles';
 import MobileStepper from '@mui/material/MobileStepper';
 import Button from '@mui/material/Button';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
+
+const getAllTattooArtistUseCase = new GetAllTattooArtistUseCase(new TattooArtistApi());
 
 
 export default function TattooArtistSlider() {
@@ -21,7 +21,6 @@ export default function TattooArtistSlider() {
   const [activeStep, setActiveStep] = useState(0);
   const theme = useTheme();
   const artistsPerPage = 3;
-  const getAllTattooArtistUseCase = new GetAllTattooArtistUseCase(new TattooArtistApi());
 
   useEffect(() => {
     const fetchArtists = async () => {
@@ -33,7 +32,7 @@ export default function TattooArtistSlider() {
         const data = await getAllTattooArtistUseCase.execute(filters);
         setArtists(data);
       } catch (error) {
-        console.error("Erro ao buscar tatuadores:", error);
+        console.error("Failed to fetch tattoo artists:", error);
       } finally {
         setLoading(false);
       }
@@ -73,7 +72,7 @@ export default function TattooArtistSlider() {
                 sx={{ cursor: "pointer", width: 200 }}
               >
                 <Avatar
-                  src={`http://localhost:8089${artist.profilePicture}`}
+                  src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${artist.profilePicture}`}
                   alt={artist.name}
                   sx={{
                     width: 120,
@@ -98,14 +97,14 @@ export default function TattooArtistSlider() {
           activeStep={activeStep}
           nextButton={
             <Button size="small" onClick={handleNext} disabled={activeStep === maxSteps - 1}>
-              Próximo
+              Next
               {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
             </Button>
           }
           backButton={
             <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
               {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
-              Voltar
+              Back
             </Button>
           }
           sx={{ maxWidth: 400, flexGrow: 1 }}

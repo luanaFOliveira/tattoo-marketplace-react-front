@@ -1,15 +1,7 @@
 'use client';
-import React, { useEffect, useState } from "react";
-import { CircularProgress, Stack, Button, Typography } from "@mui/material";
+import React from "react";
+import { Stack, Typography } from "@mui/material";
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import Grid from '@mui/material/Grid2';
-import TattooArtistCard from "@/presentation/components/TattooArtistCard";
-import { TattooArtist } from "@/domain/entities/tattoo-artist";
-import { TattooArtistApi } from "@/infra/api/tattooArtistApi";
-import { GetAllTattooArtistUseCase } from "@/application/tattoo-artist/getAllTattooArtistUseCase";
-import SearchBar from "@/presentation/components/SearchBar";
-import FilterBox from "../components/FilterBox";
-import TattooArtistList from "./TattooArtistList";
 import TattooArtistSlider from "../components/TattooArtistSlider";
 import Link from 'next/link';
 

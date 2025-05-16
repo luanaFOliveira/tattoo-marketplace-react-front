@@ -1,4 +1,4 @@
-import { TattooArtist, TattooArtistRequest } from "@/domain/entities/tattoo-artist";
+import { TattooArtistRequest } from "@/domain/entities/tattoo-artist";
 import { TattooArtistRepository } from "@/domain/repositories/tattooArtistRepository";
 
 export class RegisterTattooArtistUseCase {

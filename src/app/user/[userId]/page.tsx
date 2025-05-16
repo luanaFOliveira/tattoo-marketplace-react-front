@@ -1,4 +1,3 @@
-import { Container, Box, Typography, Paper } from "@mui/material";
 import UserView from "@/presentation/pages/UserView";
 
 export default async function UserDetail({

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Box, FormControl, InputLabel, Select, MenuItem, TextField, Typography, SelectChangeEvent, Button } from '@mui/material';
+import { Box, FormControl, InputLabel, MenuItem, Typography, SelectChangeEvent, Button } from '@mui/material';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import { StyledSelect } from '@/app/StyledRoot';
 import { Category } from '@/domain/entities/category';

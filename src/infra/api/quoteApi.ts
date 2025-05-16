@@ -30,9 +30,9 @@ export class QuoteApi implements QuoteRepository {
           throw new Error('Erro ao buscar quotes por usuario');
         }
     
-        const data = await response.json();
+        const data: Quote[] = await response.json();
     
-        return data.map((quote: any) => this.mapToQuote(quote));
+        return data.map((quote: Quote) => this.mapToQuote(quote));
     }
 
     async getAllQuotesByTattooArtist(): Promise<Quote[]> {
@@ -49,9 +49,9 @@ export class QuoteApi implements QuoteRepository {
       }
   
   
-      const data = await response.json();
+      const data: Quote[] = await response.json();
   
-      return data.map((quote: any) => this.mapToQuote(quote));
+      return data.map((quote: Quote) => this.mapToQuote(quote));
   }
 
     async registerQuote(data: QuoteRequest, images: File[] = []): Promise<{ id:number }> {
@@ -105,7 +105,7 @@ export class QuoteApi implements QuoteRepository {
     
 
 
-  private mapToQuote(data: any): Quote {
+  private mapToQuote(data: Quote | QuoteExtended): Quote {
     return {
       id: data.id,
       description: data.description,
@@ -116,7 +116,7 @@ export class QuoteApi implements QuoteRepository {
     };
   }
 
-  private mapToQuoteExtended(data: any): QuoteExtended {
+  private mapToQuoteExtended(data: QuoteExtended): QuoteExtended {
     return {
         ...this.mapToQuote(data), 
         placement: data.placement || "", 

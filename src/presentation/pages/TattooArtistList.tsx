@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback  } from "react";
 import { CircularProgress, Stack,Box } from "@mui/material";
 import Grid from '@mui/material/Grid2';
 import TattooArtistCard from "@/presentation/components/TattooArtistCard";
@@ -16,12 +16,15 @@ import { CategoryApi } from "@/infra/api/categoryApi";
 import { GetAllCategoriesUseCase } from "@/application/category/getAllCategoriesUseCase";
 
 
+const getAllCategoriesUseCase = new GetAllCategoriesUseCase(new CategoryApi());
+const tattooArtistApi = new TattooArtistApi();
+const getAllTattooArtistUseCase = new GetAllTattooArtistUseCase(tattooArtistApi);
+const getTattooArtistLocationsUseCase = new GetTattooArtistLocationsUseCase(tattooArtistApi);
+
 export default function TattooArtistList() {
   const [artists, setArtists] = useState<TattooArtist[]>([]);
   const [loading, setLoading] = useState(true);
-  const tattooArtistApi = new TattooArtistApi();
-  const getAllTattooArtistUseCase = new GetAllTattooArtistUseCase(tattooArtistApi);
-  const getTattooArtistLocationsUseCase = new GetTattooArtistLocationsUseCase(tattooArtistApi);
+  
 
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md')); 
@@ -30,30 +33,29 @@ export default function TattooArtistList() {
   const [location, setLocation] = useState('');
   const [categories, setCategories] = useState<Category[]>([]);
   const [locations, setLocations] = useState<string[]>([]);
-  const getAllCategoriesUseCase = new GetAllCategoriesUseCase(new CategoryApi());
   
   const [name, setSearchTerm] = React.useState<string>("");
 
-  const fetchArtists = async () => {
+  const fetchArtists = useCallback(async () => {
     try {
       setLoading(true);
       const filters = {
-        category, 
-        location, 
+        category,
+        location,
         name,
       };
       const data = await getAllTattooArtistUseCase.execute(filters);
       setArtists(data);
     } catch (error) {
-      console.error("Erro ao buscar tatuadores:", error);
+      console.error("Failed to fetch tattoo artists:", error);
     } finally {
       setLoading(false);
     }
-  };
+  }, [category, location, name]);
 
   useEffect(() => {
     fetchArtists();
-  }, [category, location,name]);
+  }, [fetchArtists]);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -61,7 +63,7 @@ export default function TattooArtistList() {
         const data = await getAllCategoriesUseCase.execute();
         setCategories(data);
       } catch (error) {
-        console.error("Erro ao buscar categorias:", error);
+        console.error("Failed to fetch categories:", error);
       }
     };
     fetchCategories();
@@ -73,7 +75,7 @@ export default function TattooArtistList() {
         const data = await getTattooArtistLocationsUseCase.execute();
         setLocations(data);
       } catch (error) {
-        console.error("Erro ao buscar localizacoes:", error);
+        console.error("Failed to fetch locations:", error);
       }
     };
     fetchLocations();
@@ -119,7 +121,6 @@ export default function TattooArtistList() {
                 location={location}
                 setCategory={setCategory}
                 setLocation={setLocation}
-                handleFilters={handleFilters}
                 categories={categories}
                 locations={locations}  
               />

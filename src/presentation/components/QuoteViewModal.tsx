@@ -7,7 +7,6 @@ import {
   Modal,
   CircularProgress,
   Stack,
-  Divider,
   TextField,
   Select,
   MenuItem,
@@ -36,6 +35,10 @@ const style = {
   pt:8
 };
 
+const getQuoteUseCase = new GetQuoteUseCase(new QuoteApi());
+const getAllStatusUseCase = new GetAllStatusUseCase(new StatusApi());
+const updateQuoteUseCase = new UpdateQuoteUseCase(new QuoteApi());
+
 export default function QuoteViewModal({
   quoteId,
   open,
@@ -55,11 +58,6 @@ export default function QuoteViewModal({
 
   const [statusOptions, setStatusOptions] = useState<Status[]>([]);
 
-
-  const getQuoteUseCase = new GetQuoteUseCase(new QuoteApi());
-  const getAllStatusUseCase = new GetAllStatusUseCase(new StatusApi());
-  const updateQuoteUseCase = new UpdateQuoteUseCase(new QuoteApi());
-
   const { user } = useAuth();
 
   useEffect(() => {
@@ -68,8 +66,8 @@ export default function QuoteViewModal({
         const data = await getQuoteUseCase.execute(quoteId);
         setQuote(data);
       } catch (error) {
-        console.error("Erro ao buscar orçamento:", error);
-        toast.error("Erro ao buscar orçamento");
+        console.error("Failed to fetch quote:", error);
+        toast.error("Failed to fetch quote");
       } finally {
         setLoading(false);
       }
@@ -87,8 +85,8 @@ export default function QuoteViewModal({
         const data = await getAllStatusUseCase.execute();
         setStatusOptions(data); 
       } catch (error) {
-        console.error("Erro ao buscar status:", error);
-        toast.error("Erro ao carregar opções de status.");
+        console.error("Failed to fetch status:", error);
+        toast.error("Failed to fetch status options.");
       }
     };
   
@@ -111,11 +109,11 @@ export default function QuoteViewModal({
         ...prev!,
         ...data
       }));
-      toast.success("Orçamento atualizado com sucesso!");
+      toast.success("Quote updated successfully!");
       setIsEditing(false);
     } catch (error) {
-      console.error("Erro ao salvar alterações:", error);
-      toast.error("Erro ao salvar alterações.");
+      console.error("Failed to update quote:", error);
+      toast.error("Failed to update quote.");
     }
   };
 

@@ -37,3 +37,4 @@ export interface UpdateQuote {
     price: number;
     statusId: number;
 }
+

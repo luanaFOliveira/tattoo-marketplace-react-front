@@ -9,11 +9,12 @@ export class StatusApi implements StatusRepository {
           headers: { "Content-Type": "application/json" },
         });
     
-        const data = await response.json();
-        return data.map((status: any) => this.mapToStatus(status));
+        const data: Status[] = await response.json();
+
+        return data.map((status: Status) => this.mapToStatus(status));
     }
 
-    private mapToStatus(data: any): Status {
+    private mapToStatus(data: Status): Status {
         return {
           id: data.id,
           name: data.name,

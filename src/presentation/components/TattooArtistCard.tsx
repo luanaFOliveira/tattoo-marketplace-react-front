@@ -20,7 +20,7 @@ export default function TattooArtistCard({ artist }: Props) {
       <Card sx={{ maxWidth: 1000, position: "relative", p: 1, backgroundColor: (theme) => theme.palette.secondary.main, cursor: "pointer" }}>
         <CardMedia
           component="img"
-          image={`http://localhost:8089${artist.profilePicture}`}
+          image={`${process.env.NEXT_PUBLIC_API_BASE_URL}${artist.profilePicture}`}
           alt={artist.name}
           sx={{
             width: "100%",

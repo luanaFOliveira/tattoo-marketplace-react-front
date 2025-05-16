@@ -1,22 +1,28 @@
 'use client';
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { TextField, Button, CircularProgress, Box, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, Avatar } from "@mui/material";
+import { TextField, Button, CircularProgress, Box,Avatar } from "@mui/material";
 import MultiSelect from "@/presentation/components/MultiSelect";
 import { Category } from "@/domain/entities/category";
 import { CategoryApi } from "@/infra/api/categoryApi";
-import { UpdateUserRequest, UserDetail, UserRequest } from "@/domain/entities/user";
-import { TattooArtist, TattooArtistRequest, UpdateTattooArtistRequest } from "@/domain/entities/tattoo-artist";
+import {  UserDetail, UserRequest } from "@/domain/entities/user";
+import { TattooArtist, TattooArtistRequest } from "@/domain/entities/tattoo-artist";
 import { useRouter } from 'next/navigation'
 import { GetAllCategoriesUseCase } from "@/application/category/getAllCategoriesUseCase";
+import { RegisterUseCase } from "@/presentation/adapters/registerUseCaseAdapter";
 
 
 type UserType = "user" | "tattooArtist";
 
-interface Props {
+interface Props<TRequest, TResponse> {
   userType: UserType;
-  registerUseCase: any;
-  existingUser?: UserDetail | TattooArtist;
+  registerUseCase: RegisterUseCase<TRequest, TResponse>;
+  existingUser?: TResponse;
+}
+
+interface ValidationError {
+  type: "validation";
+  errors: Record<string, string>;
 }
 
 const textFieldStyles = {
@@ -44,10 +50,16 @@ const textFieldStyles = {
 };
 
 
+const getAllCategoriesUseCase = new GetAllCategoriesUseCase(new CategoryApi());
 
 
-export default function UserRegisterForm({ userType, registerUseCase, existingUser }: Props) {
-  const [userData, setUserData] = useState<UserRequest | TattooArtistRequest>({
+export default function UserForm<TRequest extends UserRequest | TattooArtistRequest, TResponse extends UserDetail | TattooArtist | { id: number }>({
+  userType,
+  registerUseCase,
+  existingUser,
+}: Props<TRequest, TResponse>) {
+
+  const [userData, setUserData] = useState<TRequest>({
     name: "",
     email: "",
     password: "",
@@ -55,14 +67,13 @@ export default function UserRegisterForm({ userType, registerUseCase, existingUs
     age: 0,
     location: "",
     ...(userType === "tattooArtist" && { categoryIds: [] }),
-  });
-
+  } as TRequest);
+  
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>("/image_placeholder.jpg");
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const router = useRouter();
-  const getAllCategoriesUseCase = new GetAllCategoriesUseCase(new CategoryApi());
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
 
@@ -73,7 +84,7 @@ export default function UserRegisterForm({ userType, registerUseCase, existingUs
           const data = await getAllCategoriesUseCase.execute();
           setCategories(data);
         } catch (error) {
-          console.error("Erro ao buscar categorias:", error);
+          console.error("Failed to fetch categories:", error);
         }
       };
       fetchCategories();
@@ -81,7 +92,7 @@ export default function UserRegisterForm({ userType, registerUseCase, existingUs
   }, [userType]);
 
   useEffect(() => {
-    if (existingUser) {
+    if (existingUser && "name" in existingUser && "email" in existingUser) {
       const baseData = {
         name: existingUser.name,
         email: existingUser.email,
@@ -95,13 +106,13 @@ export default function UserRegisterForm({ userType, registerUseCase, existingUs
         setUserData({
           ...baseData,
           categoryIds: (existingUser as TattooArtist).categories?.map(c => c.id) ?? [],
-        } as TattooArtistRequest);
+        } as TRequest);
       } else {
-        setUserData(baseData as UserRequest);
+        setUserData(baseData as TRequest);
       }
   
       if (existingUser.profilePicture) {
-        const baseUrl = "http://localhost:8089"; 
+        const baseUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}`; 
         setImagePreview(`${baseUrl}${existingUser.profilePicture}`);
       }
     }
@@ -118,10 +129,15 @@ export default function UserRegisterForm({ userType, registerUseCase, existingUs
 
   const handleCategoryChange = (selectedIds: number[]) => {
     if (userType === "tattooArtist") {
-      setUserData((prevUser) => ({
-        ...prevUser,
-        categoryIds: selectedIds,
-      }) as TattooArtistRequest);
+      setUserData((prevUser) => {
+        if ('categoryIds' in prevUser) {
+          return {
+            ...prevUser,
+            categoryIds: selectedIds,
+          };
+        }
+        return prevUser;
+      });
     }
   };
 
@@ -140,46 +156,55 @@ export default function UserRegisterForm({ userType, registerUseCase, existingUs
     setLoading(true);
   
     if (!existingUser && userData.password !== userData.passwordConfirm) {
-      toast.error("As senhas não coincidem.");
+      toast.error("Passwords do not match.");
       setLoading(false);
       return;
     }
   
     if (isNaN(userData.age) || userData.age <= 0) {
-      toast.error("Idade inválida.");
+      toast.error("Invalid age.");
       setLoading(false);
       return;
     }
   
     try {
-      let id;
+      let updatedData = { ...userData };
+
+      if (!userData.password && !userData.passwordConfirm) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { password, passwordConfirm, ...rest } = updatedData;
+        updatedData = rest as TRequest;
+      }
   
       if (existingUser) {
-        const result = await registerUseCase.execute(existingUser.id, userData, profileImage);
-        toast.success("Usuário atualizado com sucesso.");
+        if (!registerUseCase.update) throw new Error("Update method not implemented.");
+        const result = await registerUseCase.update(String(existingUser.id), updatedData, profileImage);
+        toast.success("User updated successfully.");
         router.push(`/user/${result.id}`);
+
       } else {
-        const result = await registerUseCase.execute(userData, profileImage);
-        id = result.id;
-        toast.success("Cadastro realizado com sucesso.");
+        if (!registerUseCase.create) throw new Error("Create method not implemented.");
+        await registerUseCase.create(userData, profileImage);
+        toast.success("Registration completed successfully.");
         router.push("/login");
       }
-  
-    } catch (error: any) {
-      console.error("Erro:", error);
-     
-      if (error.type === "validation") {
-        setFieldErrors(error.errors);
+    } catch (error: unknown) {
+      console.error("Error:", error);
+      if (
+        typeof error === "object" &&
+        error !== null &&
+        "type" in error &&
+        (error as ValidationError).type === "validation"
+      ) {
+        setFieldErrors((error as ValidationError).errors);
         return;
       }
-      else {
-        toast.error(existingUser ? "Erro ao atualizar usuário." : "Erro ao cadastrar usuário.");
-      }
-  
     } finally {
       setLoading(false);
     }
   };
+  
+  
   
 
   return (
@@ -210,7 +235,7 @@ export default function UserRegisterForm({ userType, registerUseCase, existingUs
             <Avatar src={imagePreview} sx={{ width: 150, height: 150, border: "2px solid gray" }} />
           )}
           <Button variant="contained" component="label">
-            Escolher Foto de Perfil
+            Choose Profile Picture
             <input type="file" hidden accept="image/*" onChange={handleImageChange} />
           </Button>
   
@@ -227,18 +252,18 @@ export default function UserRegisterForm({ userType, registerUseCase, existingUs
           }}
         >
           <Box sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
-            <TextField label="Nome" variant="outlined" name="name" value={userData.name} onChange={handleChange} fullWidth sx={textFieldStyles} error={Boolean(fieldErrors.name)} helperText={fieldErrors.name}/>
+            <TextField label="Name" variant="outlined" name="name" value={userData.name} onChange={handleChange} fullWidth sx={textFieldStyles} error={Boolean(fieldErrors.name)} helperText={fieldErrors.name}/>
             <TextField label="Email" variant="outlined" name="email" value={userData.email} onChange={handleChange} fullWidth sx={textFieldStyles} error={Boolean(fieldErrors.email)} helperText={fieldErrors.email}/>
           </Box>
   
           <Box sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
-            <TextField label="Localização" variant="outlined" name="location" value={userData.location} onChange={handleChange} fullWidth sx={textFieldStyles} error={Boolean(fieldErrors.location)} helperText={fieldErrors.location}/>
-            <TextField label="Idade" variant="outlined" name="age" type="number" value={userData.age} onChange={handleChange} fullWidth sx={textFieldStyles} error={Boolean(fieldErrors.age)} helperText={fieldErrors.age}/>
+            <TextField label="Location" variant="outlined" name="location" value={userData.location} onChange={handleChange} fullWidth sx={textFieldStyles} error={Boolean(fieldErrors.location)} helperText={fieldErrors.location}/>
+            <TextField label="Age" variant="outlined" name="age" type="number" value={userData.age} onChange={handleChange} fullWidth sx={textFieldStyles} error={Boolean(fieldErrors.age)} helperText={fieldErrors.age}/>
           </Box>
   
           <Box sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
-            <TextField label="Senha" variant="outlined" name="password" type="password" value={userData.password} onChange={handleChange} fullWidth sx={textFieldStyles} error={Boolean(fieldErrors.password)} helperText={fieldErrors.password}/>
-            <TextField label="Confirme a senha" variant="outlined" name="passwordConfirm" type="password" value={userData.passwordConfirm} onChange={handleChange} fullWidth sx={textFieldStyles} />
+            <TextField label="Password" variant="outlined" name="password" type="password" value={userData.password} onChange={handleChange} fullWidth sx={textFieldStyles} error={Boolean(fieldErrors.password)} helperText={fieldErrors.password}/>
+            <TextField label="Confirm password" variant="outlined" name="passwordConfirm" type="password" value={userData.passwordConfirm} onChange={handleChange} fullWidth sx={textFieldStyles} />
           </Box>
   
           {userType === "tattooArtist" && (
@@ -247,7 +272,7 @@ export default function UserRegisterForm({ userType, registerUseCase, existingUs
                 items={categories}
                 selectedItems={(userData as TattooArtistRequest).categoryIds ?? []}
                 onChange={handleCategoryChange}
-                label="Categorias"
+                label="Categories"
                 />
             </Box>
           )}
@@ -261,7 +286,7 @@ export default function UserRegisterForm({ userType, registerUseCase, existingUs
           >
             {loading ? (
               <CircularProgress size={24} />
-            ) : existingUser ? "Salvar Alterações" : "Cadastrar"}
+            ) : existingUser ? "Save changes" : "Sign Up"}
           </Button>
         </Box>
       </Box>

@@ -13,8 +13,10 @@ import { AuthApi } from "@/infra/api/authApi";
 import { RegisterTattooArtistUseCase } from "@/application/tattoo-artist/registerTattooArtistUseCase";
 import { TattooArtistApi } from "@/infra/api/tattooArtistApi";
 import { useAuth } from "@/presentation/context/AuthContext"; 
-
-import AuthLayout from "@/presentation/pages/AuthLayout";
+import {
+  makeSignUpAdapter,
+  makeRegisterTattooArtistAdapter,
+} from "@/presentation/adapters/registerUseCaseAdapter";
 
 const FadeText = () => {
   const [visible, setVisible] = useState(false);
@@ -87,9 +89,13 @@ const FadeText = () => {
       {userType && (
         <Fade in={!!userType} timeout={1000}>
           <Box sx={{ marginTop: 2, width: "100%", maxWidth: 800 }}>
-            <UserForm 
-              userType={userType} 
-              registerUseCase={userType === "tattooArtist" ? registerTattooArtistUseCase : signUpUseCase}
+            <UserForm
+              userType={userType}
+              registerUseCase={
+                userType === "tattooArtist"
+                  ? makeRegisterTattooArtistAdapter(registerTattooArtistUseCase.execute.bind(registerTattooArtistUseCase))
+                  : makeSignUpAdapter(signUpUseCase.execute.bind(signUpUseCase))
+              }
             />
           </Box>
         </Fade>

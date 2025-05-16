@@ -9,11 +9,12 @@ export class CategoryApi implements CategoryRepository {
           headers: { "Content-Type": "application/json" },
         });
     
-        const data = await response.json();
-        return data.map((category: any) => this.mapToCategory(category));
+        const data: Category[] = await response.json();
+
+        return data.map((category: Category) => this.mapToCategory(category));
     }
 
-    private mapToCategory(data: any): Category {
+    private mapToCategory(data: Category): Category {
         return {
           id: data.id,
           name: data.name,

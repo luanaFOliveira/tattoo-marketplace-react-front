@@ -1,4 +1,3 @@
-import { TattooArtist } from "@/domain/entities/tattoo-artist";
 import { TattooArtistRepository } from "@/domain/repositories/tattooArtistRepository";
 
 export class GetTattooArtistLocationsUseCase {

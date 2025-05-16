@@ -1,10 +1,8 @@
 'use client';
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
-import CircularProgress from "@mui/material/CircularProgress";
-import { toast } from "react-toastify";
 import { UserDetail } from "@/domain/entities/user";
 import { TattooArtist } from "@/domain/entities/tattoo-artist";
 import UserForm from "@/presentation/components/UserForm";
@@ -12,6 +10,11 @@ import { UpdateTattooArtistUseCase } from "@/application/tattoo-artist/updateTat
 import { TattooArtistApi } from "@/infra/api/tattooArtistApi";
 import { UpdateUserUseCase } from "@/application/user/updateUserUseCase";
 import { UserApi } from "@/infra/api/userApi";
+import {
+  makeUpdateUserAdapter,
+  makeUpdateTattooArtistAdapter,
+} from "@/presentation/adapters/registerUseCaseAdapter";
+
 
 const style = {
   position: "absolute",
@@ -42,12 +45,16 @@ export default function EditUserModal({
   return (
     <Modal open={open} onClose={handleClose}>
       <Box sx={style}>
-        <UserForm 
-            userType={userType} 
-            registerUseCase={userType === "tattooArtist" ? updateTattooArtistUseCase : updateUserUseCase}
-            existingUser={user}
-        />
-        <Button onClick={handleClose}>Fechar</Button>
+      <UserForm
+        userType={userType}
+        registerUseCase={
+          userType === "tattooArtist"
+            ? makeUpdateTattooArtistAdapter(updateTattooArtistUseCase.execute.bind(updateTattooArtistUseCase))
+            : makeUpdateUserAdapter(updateUserUseCase.execute.bind(updateUserUseCase))
+        }
+        existingUser={user}
+      />
+        <Button onClick={handleClose}>Close</Button>
       </Box>
     </Modal>
   );

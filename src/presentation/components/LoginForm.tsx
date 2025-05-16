@@ -7,7 +7,7 @@ import { TextField, Button, CircularProgress, Box } from "@mui/material";
 import { LoginRequest, LoginResponse } from "@/domain/entities/user";
 import { useRouter } from 'next/navigation'
 import { useAuth } from "@/presentation/context/AuthContext";  
-import { Container, Typography, Paper } from "@mui/material";
+import { Typography, Paper } from "@mui/material";
 
 export default function LoginForm() {
   const [credentials, setCredentials] = useState<LoginRequest>({
@@ -29,12 +29,16 @@ export default function LoginForm() {
     setLoading(true);
     try {
       const response: LoginResponse = await loginUseCase.execute(credentials);
-      console.log("Usuário logado:", response.id);
-      toast.success("Login realizado com sucesso.");
+      console.log("User logged in:", response.id);
+      toast.success("Login successful.");
       router.push("/");
-    } catch (error: any) {
-      console.error("Erro no login:", error);
-      toast.error(error.message);
+    } catch (error: unknown) {
+      console.error("Login error:", error);
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("Unexpected error.");
+      }
     } finally {
       setLoading(false);
     }

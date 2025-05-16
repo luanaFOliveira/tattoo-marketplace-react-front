@@ -1,4 +1,4 @@
-import { Quote, QuoteExtended} from "@/domain/entities/quote";
+import { QuoteExtended} from "@/domain/entities/quote";
 import { QuoteRepository } from "@/domain/repositories/quoteRepository";
 
 export class GetQuoteUseCase {

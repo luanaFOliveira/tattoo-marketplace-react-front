@@ -32,7 +32,7 @@ export function StyledRoot({
   );
 }
 
-export const StyledSelect = styled(Select)(({ theme }) => ({
+export const StyledSelect = styled(Select)(() => ({
   '& .MuiOutlinedInput-notchedOutline': {
     borderColor: 'white',  
   },
