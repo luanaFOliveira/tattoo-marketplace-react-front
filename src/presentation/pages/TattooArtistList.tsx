@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useState, useCallback  } from "react";
 import { CircularProgress, Stack,Box } from "@mui/material";
-import Grid from '@mui/material/Grid2';
+import { Grid } from '@mui/material';
 import TattooArtistCard from "@/presentation/components/TattooArtistCard";
 import { TattooArtist } from "@/domain/entities/tattoo-artist";
 import { TattooArtistApi } from "@/infra/api/tattooArtistApi";
@@ -129,9 +129,9 @@ export default function TattooArtistList() {
             <SearchBar onSearch={handleSearch} />
           )}
 
-          <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+          <Grid container spacing={3}>
             {artists.map((artist) => (
-              <Grid key={artist.id} size={{ xs: 12, sm: 6, md: 3 }} component="div">
+              <Grid key={artist.id} item xs={12} sm={6} md={3}>
                 <TattooArtistCard artist={artist} />
               </Grid>
             ))}
